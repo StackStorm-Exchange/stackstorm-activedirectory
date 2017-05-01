@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:EncoreTechnologies/stackstorm-menandmice.git
+	branch = master
+	commit = 9ed3f272ca4c0681526789a828c7c1c0a0c11101
+	parent = c97330e4579a5affa924396a3f20adef6d7df4e7
+	cmdver = 0.3.1
