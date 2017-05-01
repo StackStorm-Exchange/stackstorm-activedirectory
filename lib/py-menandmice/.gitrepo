@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:EncoreTechnologies/py-menandmice.git
+	branch = master
+	commit = 98f14ca8dcb9458fc3558ab6626c75faff7b074b
+	parent = 73e578a9efd321016f2f7addabe4de111e74ae22
+	cmdver = 0.3.0
