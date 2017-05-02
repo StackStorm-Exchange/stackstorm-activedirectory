@@ -1,2 +1,16 @@
-# stackstorm-activedirectory
-StackStorm integration pack for working with Microsoft Active Directory.
+# activedirectory Integration Pack
+
+## Configuration
+TODO: Describe configuration
+
+
+# Sensors
+
+## Example Sensor
+TODO: Describe sensor
+
+
+# Actions
+
+## example
+TODO: Describe action
