@@ -1,1 +1,33 @@
 ---
+activedirectory:
+  type: "object"
+  required: true
+  properties:
+    port:
+      description: Port number for the WinRM connection.
+      type: "integer"
+      default: 5986
+      required: true
+    transport:
+      description: Transport used for WinRM (basic, plaintext, certificate, ssl, kerberos, ntlm, credssp).
+      type: "string"
+      default: 'ntlm'
+      required: true
+  patternProperties:
+      "^\\w+":
+        "$ref": "#/properties/ad-credentials"
+  additionalProperties: false
+
+ad-credentials:
+  type: "object"
+  properties:
+    username:
+      description: Username and domain for the WinRM connection.
+      type: "string"
+      required: true
+    password:
+      description: The password of the specified user.
+      type: "string"
+      secret: true
+      required: true
+  additionalProperties: false
