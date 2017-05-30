@@ -28,6 +28,8 @@ class Cli:
         packs_default_dir = os.path.join(os.path.dirname(__file__), '..', 'packs')
         deploy_parser.add_argument('-d', '--directory', default=packs_default_dir,
                                    help="Directory where packs are located")
+        deploy_parser.add_argument('-r', '--refresh-virtualenv', default="true",
+                                   help="Refresh pack's virtualenv (true/false)")
         deploy_parser.add_argument('-p', '--packs', nargs='*',
                                    help=("List of packs to deploy, if empty"
                                          "then all will be deployed"))
@@ -232,10 +234,11 @@ class Deploy(object):
             print "Registering pack: {}".format(pack_dst)
             self.run_cmd('sudo st2 pack register {}'.format(pack_dst))
             print "Registering done!"
-            
-            print "Setting up virtualenv for pack: {}".format(pack_name)
-            self.run_cmd('sudo st2 run packs.setup_virtualenv update=true packs={}'.format(pack_name))
-            print "Setup virtualenv done!"
+
+            if self.args.refresh_virtualenv == "true":
+                print "Setting up virtualenv for pack: {}".format(pack_name)
+                self.run_cmd('sudo st2 run packs.setup_virtualenv update=true packs={}'.format(pack_name))
+                print "Setup virtualenv done!"
             
 if __name__ == '__main__':
     cli = Cli()
