@@ -20,7 +20,6 @@ parameters:
   port:
     type: string
     description: "Port use when connecting to windows host (default: 5986)"
-    default:
     required: false
   transport:
     type: string
@@ -30,17 +29,14 @@ parameters:
   credential_name:
     type: string
     description: "Name of credentials from this pack's configuration to use when connecting to <hostname>."
-    default:
     required: false
   username:
     type: string
     description: "Optional override of the username in <credential_name> (example: username@domain.tld)."
-    default:
     required: false
   password:
     type: string
     description: "Optional override of the password in <credential_name>."
-    default:
     required: false
   cmdlet_credential_name:
     type: string
@@ -48,16 +44,13 @@ parameters:
       Name of credentials from this pack\'s configuration to use in the cmdlet
       execution for the -Credential argument. If not specified then no
       -Credential argument will be passed.
-    default:
     required: false
   cmdlet_username:
     type: string
     description: "Optional override of the username in <cmdlet_credential_name> (example: username@domain.tld)."
-    default:
     required: false
   cmdlet_password:
     type: string
     description: "Optional override of the password in <cmdlet_credential_name>."
-    default:
     required: false
 

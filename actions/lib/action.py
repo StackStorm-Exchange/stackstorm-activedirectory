@@ -1,5 +1,4 @@
-import winrm
-
+from winrm_connection import WinRmConnection
 from st2actions.runners.pythonrunner import Action
 
 # Note:  in order for this to work you need to run the following script on the host
@@ -74,48 +73,55 @@ class BaseAction(Action):
 
     def resolve_transport(self, transport, port):
         if not port:
-            port = self.config['port']
+            if 'port' in self.config:
+                port = self.config['port']
+            else:
+                port = 5986
+                
         if not transport:
-            transport = self.config['transport']
+            if 'transport' in self.config:
+                transport = self.config['transport']
+            else:
+                transport = 'ntlm'
         return { 'transport' : transport, 'port' : port }
     
     
     def connect(self, hostname, transport, creds):
-        return WinRmConnection(hostname=hostname,
-                               port=cfg['port'],
-                               transport=cfg['transport'],
-                               username=creds['username'],
-                               password=creds['password'])
+        self.connection = WinRmConnection(hostname=hostname,
+                                          port=transport['port'],
+                                          transport=transport['transport'],
+                                          username=creds['username'],
+                                          password=creds['password'])
         
-    def run_ps(self, connection, cmd):
+    def run_ps(self, cmd):
         """Run the PowerShell command/script in :param cmd:
         :param cmd: PowerShell command/script to execute on the windows host
         :returns: Dict containing 'stdout', 'stderr', and 'exit_status'
         :rtype: dict
         """
-        result = connection.run_ps(cmd)
+        result = self.connection.run_ps(cmd)
         return { 'stdout': result.std_out,
                  'stderr': result.std_err,
                  'exit_status': result.status_code }
 
-    def run_cmd(self, session, cmd):
+    def run_cmd(self, cmd):
         """Run the Command Prompt command in :param cmd:
         :param cmd: Command Prompt command to execute on the windows host
         :returns: Dict containing 'stdout', 'stderr', and 'exit_status'
         :rtype: dict
         """
-        result = session.run_cmd(cmd)
+        result = self.connection.run_cmd(cmd)
         return { 'stdout': result.std_out,
                  'stderr': result.std_err,
                  'exit_status': result.status_code }
 
 
     def run_ad_cmdlet(self, cmdlet, **kwargs):
-        creds = self.resolve_creds(kwargs)
-        tport = self.resolve_transport(kwargs)
+        creds = self.resolve_creds(**kwargs)
+        tport = self.resolve_transport(kwargs['transport'], kwargs['port'])
         powershell  = ''
         cmdlet_args = kwargs['args']
-        if creds['cmdlet']['username'] and creds['cmdlet']['password']:
+        if 'username' in creds['cmdlet'] and 'passowrd' in creds['cmdlet']:
             powershell = '''
                 $securepass = ConvertTo-SecureString "{3}" -AsPlainText -Force;
                 $admincreds = New-Object System.Management.Automation.PSCredential("{3}", $securepass);
@@ -127,6 +133,10 @@ class BaseAction(Action):
         else:
             powershell = '{0} {1}'.format(cmdlet, cmdlet_args)
             
-        session = self.connect(hostname, tport, creds['connect'])
-        result = self.run_ps(session, powershell)
-        return (True, result)
+        self.connect(kwargs['hostname'], tport, creds['connect'])
+        result = self.run_ps(powershell)
+        
+        if result['exit_status'] == 0:
+            return (True, result)
+        else:
+            return (False, result)
