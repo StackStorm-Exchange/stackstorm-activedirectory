@@ -1,89 +1,52 @@
-################################################################################
-# Description:
-#  Executes testing and validation for python code and configuration files
-#  within a StackStorm pack.
-#
-# Pre-requisites
-#   # Extra packages
-#   yum -y install gcc python-devel python2-pip libyaml libyaml-devel
-#
-#   # upgrade pip
-#   pip install --upgrade pip
-#  
-#   # st2sdk
-#   pip install PyYAML
-#   pip install st2sdk
-#
-#
-# Targets:
-#  validate-yaml :
-#     Checks all .yaml files to ensure they are properly formatted.
-#     Validates they are free of syntax errors.
-#
-#  validate-json :
-#     Checks all .json files to ensure they are properly formatted.
-#     Validates they are free of syntax errors.
-#     
-#  validate-pack-metadata-exists :
-#     Checks if this pack contains a pack.yaml file
-#
-#  validate-pack-register :
-#     Tries to register this pack with the local StackStorm installation.
-#     It succeeds if the registration succeeds, fails otherwise.
-#  
-#  validate-pack-pylint :
-#     See st2sdk
-#
-#
-################################################################################
+ROOT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+CI_REPO_PATH ?= $(ROOT_DIR)/ci
+CI_REPO_BRANCH ?= master
 
-YAML_FILES := $(shell find $(SOURCEDIR) -name '*.yaml')
-JSON_FILES := $(shell find $(SOURCEDIR) -name '*.json')
+# read in pack's name from pack.yaml, export it so that the ci/Makefile
+# can access its value
+export PACK_NAME := $(shell grep "name:" pack.yaml | awk '{ print $$2 }')
 
-PACK_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
+.PHONY: all
+all: invoke-ci-makefile
 
-.PHONY : all
-all : validate
+.PHONY: all
+clean: clean-ci-repo
+
+.PHONY: pack-name
+pack-name: .pack-name invoke-ci-makefile
+
+.PHONY: .pack-name
+.pack-name:
+	@echo $(PACK_NAME)
+
+.PHONY: clone-ci-repo
+clone-ci-repo:
+	@echo
+	@echo "==================== clone-ci-repo ===================="
+	@echo
+	@if [ ! -d "$(CI_REPO_PATH)" ]; then \
+		git clone https://github.com/EncoreTechnologies/ci-stackstorm.git --depth 1 --single-branch --branch $(CI_REPO_BRANCH) $(CI_REPO_PATH); \
+	else \
+		pushd $(CI_REPO_PATH) &> /dev/null; \
+		git pull; \
+		popd &> /dev/null; \
+	fi;
+
+.PHONY: clean-ci-repo
+clean-ci-repo:
+	@echo
+	@echo "==================== clean-ci-repo ===================="
+	@echo
+	@if [ -d "$(CI_REPO_PATH)" ]; then \
+		make -f $(ROOT_DIR)/ci/Makefile clean; \
+	fi;
+	rm -rf $(CI_REPO_PATH)
 
 
-.PHONY : validate
-all : validate-yaml \
-			validate-json \
-			validate-pack-metadata-exists \
-			validate-pack-register \
-			validate-pack-pylint \
-
-
-.PHONY: validate-yaml
-validate-yaml: $(YAML_FILES)
-	@echo "Validating YAML"
-	@for yaml in $(YAML_FILES); do \
-		st2-check-validate-yaml-file $$yaml; \
-	done
-
-
-.PHONY: validate-json
-validate-json: $(JSON_FILES)
-	@echo "Validating JSON"
-	@for json in $(JSON_FILES); do \
-		st2-check-validate-json-file $$json; \
-	done
-
-
-.PHONY: validate-pack-metadata-exists
-validate-pack-metadata-exists: $(PACK_DIR) validate-yaml validate-json
-	@echo "Validating pack metadata"
-	st2-check-validate-pack-metadata-exists $(PACK_DIR)
-
-
-.PHONY: validate-pack-register
-validate-pack-register: $(PACK_DIR) validate-pack-metadata-exists
-	@echo "Validating pack registration"
-	st2-check-register-pack-resources $(PACK_DIR)
-
-
-.PHONY: validate-pack-pylint
-validate-pack-pylint: $(PACK_DIR) validate-pack-register
-	@echo "Validating python files with pylint"
-	st2-check-pylint-pack $(PACK_DIR)
-
+# forward all make targets to the ci makefile to do the actual work
+.PHONY: invoke-ci-makefile
+invoke-ci-makefile: clone-ci-repo
+	@echo
+	@echo "==================== invoke-ci-makefile ===================="
+	@echo
+	make -f $(ROOT_DIR)/ci/Makefile $(MAKECMDGOALS)

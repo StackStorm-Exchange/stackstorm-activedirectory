@@ -1,11 +1,19 @@
 import winrm
 
-# Note:  in order for this to work you need to run the following script on the host
+# Note:  in order for this to work you need to run the following script on the
+#  host
 #  https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1
 
+
 class WinRmConnection(object):
-    def __init__(self, hostname, port=5986, transport='ntln', username=None, password=None):
-        self.session = winrm.Session('https://{}:{}/wsman'.format(hostname, port),
+
+    def __init__(self, hostname,
+                 port=5986,
+                 transport='ntln',
+                 username=None,
+                 password=None):
+        self.session = winrm.Session('https://{}:{}/wsman'.format(hostname,
+                                                                  port),
                                      auth=(username, password),
                                      transport=transport,
                                      server_cert_validation='ignore')
@@ -21,4 +29,3 @@ class WinRmConnection(object):
         :param cmd: Command Prompt command to execute on the windows host
         """
         return self.session.run_cmd(cmd)
-

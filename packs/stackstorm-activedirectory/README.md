@@ -1,4 +1,6 @@
-# activedirectory Integration Pack
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+# Microsoft Active Directory Integration Pack
 
 # Introduction
 This pack provides an integration between StackStorm and Microsoft Active Directory.
@@ -37,37 +39,49 @@ sets of credentials using nested values.
 
 
 ### Schema
+``` yaml
 ---
+port: <default port number to use for WinRM connections: default = '5986'>
+transport: <default transport to use for WinRM connections: default = 'ntlm'>
+
 activedirectory:
-    port: <default port number to use for WinRM connections: default = '5986'>
-    transport: <default transport to use for WinRM connections: default = 'ntlm'>
     <credentials1>:
         username: <username@domain.tld (preferred) or domain\username>
         password: <password for username>
     <credentials2>:
         username: <username@domain.tld (preferred) or domain\username>
         password: <password for username>
+        port: <port number override to use for WinRM connections: default = '5986'>
+        transport: <transport override to use for WinRM connections: default = 'ntlm'>
     ...
+```
     
 
 ### Example
+``` yaml
 ---
+port: 5986
+transport: ntlm
+  
 activedirectory:
-  port: 5986
-  transport: ntlm
   dev:
     username: username@dev.domain.tld
     password: xxx
   test:
-      username: username@test.domain.tld
+    username: username@test.domain.tld
     password: xxx
+    port: 5522
   prod:
     username: produser@domain.tld
     password: xxx
+    port: 6611
+    transport: kerberos
   prod-svc:
     username: prodsvc@domain.tld
     password: xxx
-    
+    port: 1234
+    transport: basic
+```
     
 **Note** : All actions allow you to specify a set of credentials as inputs
            to the action instead of requiring a configuration
@@ -79,7 +93,7 @@ activedirectory:
 
 
 ## example
-TODO: Describe action
+**TODO** Describe action
 
 
 
