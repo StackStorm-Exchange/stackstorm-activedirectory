@@ -1,0 +1,56 @@
+---
+description: >
+  Execute WinRM command on a remote host
+  Before running this you need to execute the following script on the host 
+  https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1
+  
+enabled: true
+runner_type: "python-script"
+entry_point: new_ad_computer.py
+name: new_ad_computer
+parameters:
+  args:
+    type: string
+    description: "Arguments to pass to the New-ADComputer PowerShell cmdlet."
+    required: true
+  hostname:
+    type: string
+    description: "Remote host to execute the command on"
+    required: true
+  port:
+    type: string
+    description: "Port use when connecting to windows host (default: 5986)"
+    required: false
+  transport:
+    type: string
+    description: "Password for the remote hots"
+    default: 'ntlm'
+    required: false
+  credential_name:
+    type: string
+    description: "Name of credentials from this pack's configuration to use when connecting to <hostname>."
+    required: false
+  username:
+    type: string
+    description: "Optional override of the username in <credential_name> (example: username@domain.tld)."
+    required: false
+  password:
+    type: string
+    description: "Optional override of the password in <credential_name>."
+    required: false
+  cmdlet_credential_name:
+    type: string
+    description: >
+      Name of credentials from this pack\'s configuration to use in the cmdlet
+      execution for the -Credential argument. If not specified then no
+      -Credential argument will be passed.
+    required: false
+  cmdlet_username:
+    type: string
+    description: "Optional override of the username in <cmdlet_credential_name> (example: username@domain.tld)."
+    required: false
+  cmdlet_password:
+    type: string
+    description: "Optional override of the password in <cmdlet_credential_name>."
+    required: false
+
