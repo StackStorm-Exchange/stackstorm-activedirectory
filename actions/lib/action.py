@@ -6,40 +6,30 @@ from st2actions.runners.pythonrunner import Action
 #  https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1
 
 CREDENTIALS_ITEMS = ['username', 'password']
-TRANSPORT_ITEMS = ['port', 'transpaort']
+TRANSPORT_ITEMS = ['port', 'transport']
 
 
 class BaseAction(Action):
 
     def __init__(self, config):
         super(BaseAction, self).__init__(config)
+        self.connection = None
 
     def resolve_creds(self, **kwargs):
-        creds_config = self.create_creds_spec(kwargs['credential_name'],
-                                              kwargs['username'],
-                                              kwargs['password'],
-                                              kwargs['cmdlet_credential_name'],
-                                              kwargs['cmdlet_username'],
-                                              kwargs['cmdlet_password'])
+        creds_config = self.create_creds_spec(**kwargs)
         creds = {}
         for key, value in creds_config.items():
             creds[key] = self.resolve_creds_spec(value)
         return creds
 
-    def create_creds_spec(self,
-                          credential_name,
-                          username,
-                          password,
-                          cmdlet_credential_name,
-                          cmdlet_username,
-                          cmdlet_password):
-        return {'connect': {'credential_name': credential_name,
-                            'username': username,
-                            'password': password,
+    def create_creds_spec(self, **kwargs):
+        return {'connect': {'credential_name': kwargs['credential_name'],
+                            'username': kwargs['username'],
+                            'password': kwargs['password'],
                             'required': True},
-                'cmdlet': {'credential_name': cmdlet_credential_name,
-                           'username': cmdlet_username,
-                           'password': cmdlet_password,
+                'cmdlet': {'credential_name': kwargs['cmdlet_credential_name'],
+                           'username': kwargs['cmdlet_username'],
+                           'password': kwargs['cmdlet_password'],
                            'required': False}}
 
     def resolve_creds_spec(self, creds_spec):
@@ -48,8 +38,14 @@ class BaseAction(Action):
         # if the user specified the "credential_name" parameter
         # then grab the credentials from the pack's config.yaml
         credential_name = creds_spec['credential_name']
+        config_creds = None
         if credential_name:
-            creds = self.config['activedirectory'].get(credential_name)
+            config_creds = self.config['activedirectory'].get(credential_name)
+            if not config_creds:
+                raise KeyError("config.yaml missing credential: activedirectory:%s"
+                               % credential_name)
+
+        creds['credential_name'] = credential_name
 
         # Override the items in creds read in from the config given the
         # override parameters from the action itself
@@ -59,70 +55,93 @@ class BaseAction(Action):
         #   standalone and/or from the commandline
         for item in CREDENTIALS_ITEMS:
             if item in creds_spec and creds_spec[item]:
+                # use creds from cmdline first (override)
                 creds[item] = creds_spec[item]
+            elif item in config_creds and config_creds[item]:
+                # fallback to creds in config
+                creds[item] = config_creds[item]
 
             # ensure that creds has all items (if this credential is required)
-            if creds_spec['required'] and item not in creds:
+            if ('required' in creds_spec and creds_spec['required'] and item not in creds):
                 if credential_name:
                     raise KeyError("config.yaml mising: activedirectory:%s:%s"
                                    % (credential_name, item))
                 else:
                     raise KeyError("missing action parameter %s" % item)
 
+        # copy in all transport items into the credentials spec
+        for item in TRANSPORT_ITEMS:
+            if config_creds and item in config_creds and config_creds[item]:
+                creds[item] = config_creds[item]
+
         return creds
 
-    def resolve_transport(self, transport, port):
-        if not port:
-            if 'port' in self.config:
-                port = self.config['port']
-            else:
-                port = 5986
+    @staticmethod
+    def default_transport():
+        return 'ntlm'
 
-        if not transport:
-            if 'transport' in self.config:
-                transport = self.config['transport']
-            else:
-                transport = 'ntlm'
-        return {'transport': transport, 'port': port}
+    @staticmethod
+    def default_port():
+        return 5986
+
+    def resolve_transport(self, transport, port, connect_creds):
+        """ Resolves the transport and port to use for the connection
+        based on the following priorities:
+        1) if port/transport specified as action params, use this
+        2) if port/transport specified as params on the credentials in config
+        3) if port/transport specified at root level in the config
+        4) else, use the default port/transport (5986/ntlm)
+        :param transport: the transport parameter given to the action
+        (default = None)
+        :param port: the port parameter given to the action (default = None)
+        :param connect_creds: the connection credentials read in from the
+        config.
+        :returns: dictionary with 'transport' and 'port' set the resolved
+        values
+        :rtype: dictionary
+        """
+        resolved_transport = None
+        resolved_port = None
+
+        if port:
+            resolved_port = port
+        elif 'port' in connect_creds:
+            resolved_port = connect_creds['port']
+        elif 'port' in self.config:
+            resolved_port = self.config['port']
+        else:
+            resolved_port = BaseAction.default_port()
+
+        if transport:
+            resolved_transport = transport
+        elif 'transport' in connect_creds:
+            resolved_transport = connect_creds['transport']
+        elif 'transport' in self.config:
+            resolved_transport = self.config['transport']
+        else:
+            resolved_transport = BaseAction.default_transport()
+
+        return {'transport': resolved_transport, 'port': resolved_port}
 
     def connect(self, hostname, transport, creds):
-        self.connection = WinRmConnection(hostname=hostname,
-                                          port=transport['port'],
-                                          transport=transport['transport'],
-                                          username=creds['username'],
-                                          password=creds['password'])
-
-    def run_ps(self, cmd):
-        """Run the PowerShell command/script in :param cmd:
-        :param cmd: PowerShell command/script to execute on the windows host
-        :returns: Dict containing 'stdout', 'stderr', and 'exit_status'
-        :rtype: dict
-        """
-        result = self.connection.run_ps(cmd)
-        return {'stdout': result.std_out,
-                'stderr': result.std_err,
-                'exit_status': result.status_code}
-
-    def run_cmd(self, cmd):
-        """Run the Command Prompt command in :param cmd:
-        :param cmd: Command Prompt command to execute on the windows host
-        :returns: Dict containing 'stdout', 'stderr', and 'exit_status'
-        :rtype: dict
-        """
-        result = self.connection.run_cmd(cmd)
-        return {'stdout': result.std_out,
-                'stderr': result.std_err,
-                'exit_status': result.status_code}
+        if not self.connection:
+            self.connection = WinRmConnection(hostname=hostname,
+                                              port=transport['port'],
+                                              transport=transport['transport'],
+                                              username=creds['username'],
+                                              password=creds['password'])
 
     def run_ad_cmdlet(self, cmdlet, **kwargs):
         creds = self.resolve_creds(**kwargs)
-        tport = self.resolve_transport(kwargs['transport'], kwargs['port'])
+        tport = self.resolve_transport(kwargs['transport'],
+                                       kwargs['port'],
+                                       creds['connect'])
         powershell = ''
         cmdlet_args = kwargs['args']
         if 'username' in creds['cmdlet'] and 'passowrd' in creds['cmdlet']:
             powershell = '''
                 $securepass = ConvertTo-SecureString "{3}" -AsPlainText -Force;
-                $admincreds = New-Object System.Management.Automation.PSCredential("{2}", $securepass); 
+                $admincreds = New-Object System.Management.Automation.PSCredential("{2}", $securepass);
                 {0} -Credential $admincreds {1}
                 '''.format(cmdlet,  # noqa (this suppresses long line warnings above)
                            cmdlet_args,
@@ -131,8 +150,14 @@ class BaseAction(Action):
         else:
             powershell = '{0} {1}'.format(cmdlet, cmdlet_args)
 
+        # connect to server
         self.connect(kwargs['hostname'], tport, creds['connect'])
-        result = self.run_ps(powershell)
+
+        # run powershell command
+        ps_result = self.connection.run_ps(powershell)
+        result = {'stdout': ps_result.std_out,
+                  'stderr': ps_result.std_err,
+                  'exit_status': ps_result.status_code}
 
         if result['exit_status'] == 0:
             return (True, result)

@@ -44,6 +44,7 @@ clean-ci-repo:
 	@if [ -d "$(CI_REPO_PATH)" ]; then \
 		make -f $(ROOT_DIR)/ci/Makefile clean; \
 	fi;
+	rm -rf $(CI_REPO_PATH)
 
 # forward all make targets not found in this makefile to the ci makefile to do
 # the actual work (by calling the invoke-ci-makefile target)
