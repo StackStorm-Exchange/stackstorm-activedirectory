@@ -2,7 +2,8 @@ import unittest
 import winrm
 
 from lib.winrm_connection import WinRmConnection
-    
+
+
 class TestWinRmConnection(unittest.TestCase):
 
     def setUp(self):
@@ -29,4 +30,3 @@ class TestWinRmConnection(unittest.TestCase):
         self.assertEqual(connection.session.protocol.transport.password, password)
         self.assertEqual(connection.session.protocol.transport.server_cert_validation,
                          server_cert_validation)
-        
