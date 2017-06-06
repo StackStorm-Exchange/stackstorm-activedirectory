@@ -114,3 +114,11 @@ Get-Command -Module ADDSDeployment
 
 ## Example Sensor
 TODO: Describe sensor
+
+
+# TODOs
+- Actions for remaining cmdlets in the AD module
+- Tests (mock) for WinRM connection and cmdlets
+- Complete this readme file with comprehensive documentation
+- Workflow to install RSAT toos
+- Include ps1 script to setup Windows machines
