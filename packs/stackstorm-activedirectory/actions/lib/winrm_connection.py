@@ -9,11 +9,10 @@ class WinRmConnection(object):
 
     def __init__(self, hostname,
                  port=5986,
-                 transport='ntln',
+                 transport='ntlm',
                  username=None,
                  password=None):
-        self.session = winrm.Session('https://{}:{}/wsman'.format(hostname,
-                                                                  port),
+        self.session = winrm.Session('https://{}:{}/wsman'.format(hostname, port),
                                      auth=(username, password),
                                      transport=transport,
                                      server_cert_validation='ignore')

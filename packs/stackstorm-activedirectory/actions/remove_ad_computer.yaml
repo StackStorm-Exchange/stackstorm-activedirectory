@@ -9,6 +9,10 @@ runner_type: "python-script"
 entry_point: remove_ad_computer.py
 name: remove_ad_computer
 parameters:
+  cmdlet:
+    type: string
+    default: Remove-ADComputer
+    immutable: true
   args:
     type: string
     description: "Arguments to pass to the Remove-ADComputer PowerShell cmdlet."

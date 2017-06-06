@@ -1,0 +1,13 @@
+---
+port: 6543
+transport: basic
+
+activedirectory:
+    'base':
+        username: Administrator
+        password: PassworD!
+    'tport-override':
+        username: Administrator
+        password: PassworD!
+        port: 7654
+        transport: ssl
