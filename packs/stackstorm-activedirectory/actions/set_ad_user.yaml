@@ -1,13 +1,13 @@
 ---
-description: Modifies an Active Directory user.
+description: "Modifies an Active Directory user."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: set_ad_user
+name: "set_ad_user"
 parameters:
   cmdlet:
     type: string
-    default: Set-ADUser
+    default: "Set-ADUser"
     immutable: true
   args:
     type: string

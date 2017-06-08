@@ -1,13 +1,13 @@
 ---
-description: Moves operation master (also known as flexible single master operations or FSMO) roles to an Active Directory domain controller.
+description: "Moves operation master (also known as flexible single master operations or FSMO) roles to an Active Directory domain controller."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: move_ad_directory_server_operation_master_role
+name: "move_ad_directory_server_operation_master_role"
 parameters:
   cmdlet:
     type: string
-    default: Move-ADDirectoryServerOperationMasterRole
+    default: "Move-ADDirectoryServerOperationMasterRole"
     immutable: true
   args:
     type: string

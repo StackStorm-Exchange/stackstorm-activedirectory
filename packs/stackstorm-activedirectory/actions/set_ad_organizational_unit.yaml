@@ -1,13 +1,13 @@
 ---
-description: Modifies an Active Directory OU.
+description: "Modifies an Active Directory OU."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: set_ad_organizational_unit
+name: "set_ad_organizational_unit"
 parameters:
   cmdlet:
     type: string
-    default: Set-ADOrganizationalUnit
+    default: "Set-ADOrganizationalUnit"
     immutable: true
   args:
     type: string

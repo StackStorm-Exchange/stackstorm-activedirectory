@@ -1,13 +1,13 @@
 ---
-description: Creates a new Active Directory computer.
+description: "Creates a new Active Directory computer."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: new_ad_computer
+name: "new_ad_computer"
 parameters:
   cmdlet:
     type: string
-    default: New-ADComputer
+    default: "New-ADComputer"
     immutable: true
   args:
     type: string

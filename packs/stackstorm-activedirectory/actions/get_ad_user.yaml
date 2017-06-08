@@ -1,13 +1,13 @@
 ---
-description: Gets one or more Active Directory users.
+description: "Gets one or more Active Directory users."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_user
+name: "get_ad_user"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADUser
+    default: "Get-ADUser"
     immutable: true
   args:
     type: string

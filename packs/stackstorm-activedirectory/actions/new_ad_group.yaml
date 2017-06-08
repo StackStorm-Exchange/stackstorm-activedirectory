@@ -1,13 +1,13 @@
 ---
-description: Creates an Active Directory group.
+description: "Creates an Active Directory group."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: new_ad_group
+name: "new_ad_group"
 parameters:
   cmdlet:
     type: string
-    default: New-ADGroup
+    default: "New-ADGroup"
     immutable: true
   args:
     type: string

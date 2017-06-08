@@ -1,13 +1,13 @@
 ---
-description: Gets an Active Directory domain.
+description: "Gets an Active Directory domain."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_domain
+name: "get_ad_domain"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADDomain
+    default: "Get-ADDomain"
     immutable: true
   args:
     type: string

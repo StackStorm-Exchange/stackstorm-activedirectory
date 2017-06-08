@@ -1,13 +1,13 @@
 ---
-description: Modifies an Active Directory forest.
+description: "Modifies an Active Directory forest."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: set_ad_forest
+name: "set_ad_forest"
 parameters:
   cmdlet:
     type: string
-    default: Set-ADForest
+    default: "Set-ADForest"
     immutable: true
   args:
     type: string

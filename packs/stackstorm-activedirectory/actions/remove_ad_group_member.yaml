@@ -1,13 +1,13 @@
 ---
-description: Removes one or more members from an Active Directory group.
+description: "Removes one or more members from an Active Directory group."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_group_member
+name: "remove_ad_group_member"
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADGroupMember
+    default: "Remove-ADGroupMember"
     immutable: true
   args:
     type: string

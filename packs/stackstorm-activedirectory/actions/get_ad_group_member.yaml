@@ -1,13 +1,13 @@
 ---
-description: Gets the members of an Active Directory group.
+description: "Gets the members of an Active Directory group."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_group_member
+name: "get_ad_group_member"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADGroupMember
+    default: "Get-ADGroupMember"
     immutable: true
   args:
     type: string

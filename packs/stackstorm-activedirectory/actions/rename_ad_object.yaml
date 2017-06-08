@@ -1,13 +1,13 @@
 ---
-description: Changes the name of an Active Directory object.
+description: "Changes the name of an Active Directory object."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: rename_ad_object
+name: "rename_ad_object"
 parameters:
   cmdlet:
     type: string
-    default: Rename-ADObject
+    default: "Rename-ADObject"
     immutable: true
   args:
     type: string

@@ -1,13 +1,13 @@
 ---
-description: Gets one or more Active Directory OUs.
+description: "Gets one or more Active Directory OUs."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_organizational_unit
+name: "get_ad_organizational_unit"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADOrganizationalUnit
+    default: "Get-ADOrganizationalUnit"
     immutable: true
   args:
     type: string

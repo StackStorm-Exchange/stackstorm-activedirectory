@@ -1,13 +1,13 @@
 ---
-description: Removes an Active Directory computer.
+description: "Removes an Active Directory computer."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_computer
+name: "remove_ad_computer"
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADComputer
+    default: "Remove-ADComputer"
     immutable: true
   args:
     type: string

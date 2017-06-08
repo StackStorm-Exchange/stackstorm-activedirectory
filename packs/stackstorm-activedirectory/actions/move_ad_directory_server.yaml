@@ -1,13 +1,13 @@
 ---
-description: Moves a domain controller in AD DS to a new site.
+description: "Moves a domain controller in AD DS to a new site."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: move_ad_directory_server
+name: "move_ad_directory_server"
 parameters:
   cmdlet:
     type: string
-    default: Move-ADDirectoryServer
+    default: "Move-ADDirectoryServer"
     immutable: true
   args:
     type: string

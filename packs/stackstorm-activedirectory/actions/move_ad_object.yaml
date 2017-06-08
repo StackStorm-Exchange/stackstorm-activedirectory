@@ -1,13 +1,13 @@
 ---
-description: Moves an Active Directory object or a container of objects to a different container or domain.
+description: "Moves an Active Directory object or a container of objects to a different container or domain."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: move_ad_object
+name: "move_ad_object"
 parameters:
   cmdlet:
     type: string
-    default: Move-ADObject
+    default: "Move-ADObject"
     immutable: true
   args:
     type: string

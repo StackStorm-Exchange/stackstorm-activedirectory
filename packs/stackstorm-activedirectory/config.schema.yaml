@@ -24,7 +24,7 @@ activedirectory-credentials:
   type: "object"
   properties:
     username:
-      description: Username and domain for the WinRM connection (ex: ad_user@domain.tld).
+      description: "Username and domain for the WinRM connection (example: ad_user@domain.tld)."
       type: "string"
       required: true
     password:

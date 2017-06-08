@@ -1,13 +1,13 @@
 ---
-description: Gets an Active Directory forest.
+description: "Gets an Active Directory forest."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_forest
+name: "get_ad_forest"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADForest
+    default: "Get-ADForest"
     immutable: true
   args:
     type: string

@@ -1,13 +1,13 @@
 ---
-description: Disables an Active Directory account.
+description: "Disables an Active Directory account."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: disable_ad_account
+name: "disable_ad_account"
 parameters:
   cmdlet:
     type: string
-    default: Disable-ADAccount
+    default: "Disable-ADAccount"
     immutable: true
   args:
     type: string

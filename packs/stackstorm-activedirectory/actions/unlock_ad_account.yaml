@@ -1,13 +1,13 @@
 ---
-description: Unlocks an Active Directory account.
+description: "Unlocks an Active Directory account."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: unlock_ad_account
+name: "unlock_ad_account"
 parameters:
   cmdlet:
     type: string
-    default: Unlock-ADAccount
+    default: "Unlock-ADAccount"
     immutable: true
   args:
     type: string

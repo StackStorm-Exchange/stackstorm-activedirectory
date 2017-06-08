@@ -1,13 +1,13 @@
 ---
-description: Removes an Active Directory user.
+description: "Removes an Active Directory user."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_user
+name: "remove_ad_user"
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADUser
+    default: "Remove-ADUser"
     immutable: true
   args:
     type: string

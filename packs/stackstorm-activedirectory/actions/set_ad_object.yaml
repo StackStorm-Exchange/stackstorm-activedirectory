@@ -1,13 +1,13 @@
 ---
-description: Modifies an Active Directory object.
+description: "Modifies an Active Directory object."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: set_ad_object
+name: "set_ad_object"
 parameters:
   cmdlet:
     type: string
-    default: Set-ADObject
+    default: "Set-ADObject"
     immutable: true
   args:
     type: string

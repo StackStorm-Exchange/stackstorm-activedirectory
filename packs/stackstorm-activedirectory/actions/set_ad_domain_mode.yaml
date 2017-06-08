@@ -1,13 +1,13 @@
 ---
-description: Sets the domain functional level for an Active Directory domain.
+description: "Sets the domain functional level for an Active Directory domain."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: set_ad_domain_mode
+name: "set_ad_domain_mode"
 parameters:
   cmdlet:
     type: string
-    default: Set-ADDomainMode
+    default: "Set-ADDomainMode"
     immutable: true
   args:
     type: string

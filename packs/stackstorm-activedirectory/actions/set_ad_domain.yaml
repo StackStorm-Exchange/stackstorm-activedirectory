@@ -1,13 +1,13 @@
 ---
-description: Modifies an Active Directory domain.
+description: "Modifies an Active Directory domain."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: set_ad_domain
+name: "set_ad_domain"
 parameters:
   cmdlet:
     type: string
-    default: Set-ADDomain
+    default: "Set-ADDomain"
     immutable: true
   args:
     type: string

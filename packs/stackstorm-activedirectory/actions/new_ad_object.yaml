@@ -1,13 +1,13 @@
 ---
-description: Creates an Active Directory object.
+description: "Creates an Active Directory object."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: new_ad_object
+name: "new_ad_object"
 parameters:
   cmdlet:
     type: string
-    default: New-ADObject
+    default: "New-ADObject"
     immutable: true
   args:
     type: string

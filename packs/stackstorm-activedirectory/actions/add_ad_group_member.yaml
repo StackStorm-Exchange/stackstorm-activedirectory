@@ -1,13 +1,13 @@
 ---
-description: Adds one or more members to an Active Directory group.
+description: "Adds one or more members to an Active Directory group."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: add_ad_group_member
+name: "add_ad_group_member"
 parameters:
   cmdlet:
     type: string
-    default: Add-ADGroupMember
+    default: "Add-ADGroupMember"
     immutable: true
   args:
     type: string
