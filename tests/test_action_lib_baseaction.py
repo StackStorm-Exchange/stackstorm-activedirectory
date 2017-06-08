@@ -1,5 +1,6 @@
 from activedirectory_base_action_test_case import ActiveDirectoryBaseActionTestCase
 from run_cmdlet import RunCmdlet
+from mock import patch
 
 
 class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
@@ -149,9 +150,9 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         action = self.get_action_instance(self.config_blank)
         expected = {'transport': 'abc', 'port': 123}
         connect_creds = {}
-        resolved = action.resolve_transport(expected['transport'],
-                                            expected['port'],
-                                            connect_creds)
+        resolved = action.resolve_transport(connect_creds,
+                                            transport=expected['transport'],
+                                            port=expected['port'])
         self.assertEqual(resolved, expected)
 
     def test_resolve_transport_config_creds(self):
@@ -165,7 +166,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                                      cmdlet_credential_name='tport-override',
                                      cmdlet_username='',
                                      cmdlet_password='')
-        resolved = action.resolve_transport('', '', creds['connect'])
+        resolved = action.resolve_transport(creds['connect'])
         self.assertEqual(resolved, expected)
 
     def test_resolve_transport_config_base(self):
@@ -179,12 +180,88 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                                      cmdlet_credential_name='base',
                                      cmdlet_username='',
                                      cmdlet_password='')
-        resolved = action.resolve_transport('', '', creds['connect'])
+        resolved = action.resolve_transport(creds['connect'])
         self.assertEqual(resolved, expected)
 
     def test_resolve_transport_default(self):
         action = self.get_action_instance(self.config_blank)
         expected = {'transport': action.default_transport(),
                     'port': action.default_port()}
-        resolved = action.resolve_transport('', '', {})
+        resolved = action.resolve_transport({})
         self.assertEqual(resolved, expected)
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      hostname='abc')
+
+        connection.run_ps.assert_called_with(powershell)
+        
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_fail(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 1
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      hostname='abc')
+
+        connection.run_ps.assert_called_with(powershell)
+        
+        self.assertEqual(result[0], False)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_cmdlet_credentials(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
+                      "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
+                      "{0} -Credential $admincreds {1}"
+                      "").format(cmdlet,
+                                 cmdlet_args,
+                                 self.config_good['activedirectory']['base']['username'],
+                                 self.config_good['activedirectory']['base']['password'])
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      cmdlet_credential_name='base',
+                                      hostname='abc')
+
+        connection.run_ps.assert_called_with(powershell)
+        
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
