@@ -1,17 +1,17 @@
 ---
-description: Removes an Active Directory computer.
+description: Changes the name of an Active Directory object.
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_computer
+name: rename_ad_object
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADComputer
+    default: Rename-ADObject
     immutable: true
   args:
     type: string
-    description: "Arguments to pass to the Remove-ADComputer PowerShell cmdlet."
+    description: "Arguments to pass to the Rename-ADObject PowerShell cmdlet."
     required: true
   hostname:
     type: string

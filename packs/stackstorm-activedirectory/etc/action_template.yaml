@@ -1,17 +1,17 @@
 ---
-description: Removes an Active Directory computer.
+description: {{ description }}
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_computer
+name: {{ cmdlet_snake_case }}
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADComputer
+    default: {{ cmdlet_camel_case }}
     immutable: true
   args:
     type: string
-    description: "Arguments to pass to the Remove-ADComputer PowerShell cmdlet."
+    description: "Arguments to pass to the {{ cmdlet_camel_case }} PowerShell cmdlet."
     required: true
   hostname:
     type: string
@@ -53,3 +53,4 @@ parameters:
     type: string
     description: "Optional override of the password in <cmdlet_credential_name>."
     required: false
+

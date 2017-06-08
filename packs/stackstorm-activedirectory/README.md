@@ -38,6 +38,10 @@ using to connect to the remote Windows hosts in the
 `/opt/stackstorm/config/activedirectory.yaml` file. You can specificy multiple 
 sets of credentials using nested values.
 
+**Note** : `st2 pack config` doesn't handle nested schemas very well (known bug)
+    so it's best to create the configuraiton file yourself and copy it into
+    `/opt/stackstorm/configs/activedirectory.yaml` then run `st2ctl reload --register-configs`
+
 
 ### Schema
 ``` yaml
@@ -46,18 +50,17 @@ port: <default port number to use for WinRM connections: default = '5986'>
 transport: <default transport to use for WinRM connections: default = 'ntlm'>
 
 activedirectory:
-    <credentials1>:
-        username: <username@domain.tld (preferred) or domain\username>
-        password: <password for username>
-    <credentials2>:
-        username: <username@domain.tld (preferred) or domain\username>
-        password: <password for username>
-        port: <port number override to use for WinRM connections: default = '5986'>
-        transport: <transport override to use for WinRM connections: default = 'ntlm'>
-    ...
+  <credential-name-1>:
+    username: <username@domain.tld (preferred) or domain\username>
+    password: <password for username>
+  <credential-name-2>:
+    username: <username@domain.tld (preferred) or domain\username>
+    password: <password for username>
+    port: <port number override to use for WinRM connections: default = '5986'>
+    transport: <transport override to use for WinRM connections: default = 'ntlm'>
+  ...
 ```
     
-
 ### Example
 ``` yaml
 ---
@@ -87,27 +90,13 @@ activedirectory:
 **Note** : All actions allow you to specify a set of credentials as inputs
            to the action instead of requiring a configuration
 
-
 # Actions
 
 
 
 
-## example
+## Examples
 **TODO** Describe action
-
-
-
-**TODO** 
-Create action to install Active Directory? https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-#BKMK_PS
-Active Directory Deployment Services (ADDS) cmdlets: https://technet.microsoft.com/en-us/itpro/powershell/windows/addsdeployment/addsdeployment
-``` PowerShell
-Import-Module ServerManager 
-Install-WindowsFeature -IncludeManagementTools -Name AD-Domain-Services
-Import-Module ADDSDeployment
-Get-Command -Module ADDSDeployment
-???
-```
 
 
 # Sensors
@@ -122,3 +111,16 @@ TODO: Describe sensor
 - Complete this readme file with comprehensive documentation
 - Workflow to install RSAT toos
 - Include ps1 script to setup Windows machines
+
+# Future Ideas
+-  Create action to install Active Directory
+   https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-#BKMK_PS
+   Active Directory Deployment Services (ADDS) cmdlets: https://technet.microsoft.com/en-us/itpro/powershell/windows/addsdeployment/addsdeployment
+   ``` PowerShell
+   Import-Module ServerManager 
+   Install-WindowsFeature -IncludeManagementTools -Name AD-Domain-Services
+   Import-Module ADDSDeployment
+   Get-Command -Module ADDSDeployment
+   ???
+   ```
+

@@ -1,9 +1,5 @@
 ---
-description: >
-  Execute WinRM command on a remote host
-  Before running this you need to execute the following script on the host 
-  https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1
-  
+description: Gets one or more Active Directory computers.
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
@@ -57,4 +53,3 @@ parameters:
     type: string
     description: "Optional override of the password in <cmdlet_credential_name>."
     required: false
-

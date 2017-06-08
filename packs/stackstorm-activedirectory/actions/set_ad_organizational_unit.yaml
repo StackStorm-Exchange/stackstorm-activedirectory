@@ -1,17 +1,17 @@
 ---
-description: Removes an Active Directory computer.
+description: Modifies an Active Directory OU.
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_computer
+name: set_ad_organizational_unit
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADComputer
+    default: Set-ADOrganizationalUnit
     immutable: true
   args:
     type: string
-    description: "Arguments to pass to the Remove-ADComputer PowerShell cmdlet."
+    description: "Arguments to pass to the Set-ADOrganizationalUnit PowerShell cmdlet."
     required: true
   hostname:
     type: string
