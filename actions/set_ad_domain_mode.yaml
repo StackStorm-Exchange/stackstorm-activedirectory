@@ -1,17 +1,17 @@
 ---
-description: Removes an Active Directory computer.
+description: Sets the domain functional level for an Active Directory domain.
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_computer
+name: set_ad_domain_mode
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADComputer
+    default: Set-ADDomainMode
     immutable: true
   args:
     type: string
-    description: "Arguments to pass to the Remove-ADComputer PowerShell cmdlet."
+    description: "Arguments to pass to the Set-ADDomainMode PowerShell cmdlet."
     required: true
   hostname:
     type: string

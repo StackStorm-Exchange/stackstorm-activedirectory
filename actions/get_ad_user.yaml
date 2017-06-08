@@ -1,17 +1,17 @@
 ---
-description: Removes an Active Directory computer.
+description: Gets one or more Active Directory users.
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_computer
+name: get_ad_user
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADComputer
+    default: Get-ADUser
     immutable: true
   args:
     type: string
-    description: "Arguments to pass to the Remove-ADComputer PowerShell cmdlet."
+    description: "Arguments to pass to the Get-ADUser PowerShell cmdlet."
     required: true
   hostname:
     type: string

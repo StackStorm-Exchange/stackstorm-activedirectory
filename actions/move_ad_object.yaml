@@ -1,17 +1,17 @@
 ---
-description: Removes an Active Directory computer.
+description: Moves an Active Directory object or a container of objects to a different container or domain.
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_computer
+name: move_ad_object
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADComputer
+    default: Move-ADObject
     immutable: true
   args:
     type: string
-    description: "Arguments to pass to the Remove-ADComputer PowerShell cmdlet."
+    description: "Arguments to pass to the Move-ADObject PowerShell cmdlet."
     required: true
   hostname:
     type: string

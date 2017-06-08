@@ -1,17 +1,17 @@
 ---
-description: Removes an Active Directory computer.
+description: Adds one or more members to an Active Directory group.
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_computer
+name: add_ad_group_member
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADComputer
+    default: Add-ADGroupMember
     immutable: true
   args:
     type: string
-    description: "Arguments to pass to the Remove-ADComputer PowerShell cmdlet."
+    description: "Arguments to pass to the Add-ADGroupMember PowerShell cmdlet."
     required: true
   hostname:
     type: string
