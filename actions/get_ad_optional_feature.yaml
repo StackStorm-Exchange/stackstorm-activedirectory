@@ -1,13 +1,13 @@
 ---
-description: Gets one or more Active Directory optional features.
+description: "Gets one or more Active Directory optional features."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_optional_feature
+name: "get_ad_optional_feature"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADOptionalFeature
+    default: "Get-ADOptionalFeature"
     immutable: true
   args:
     type: string

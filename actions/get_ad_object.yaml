@@ -1,13 +1,13 @@
 ---
-description: Gets one or more Active Directory objects.
+description: "Gets one or more Active Directory objects."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_object
+name: "get_ad_object"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADObject
+    default: "Get-ADObject"
     immutable: true
   args:
     type: string

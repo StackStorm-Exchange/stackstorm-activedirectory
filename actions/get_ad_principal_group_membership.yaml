@@ -1,13 +1,13 @@
 ---
-description: Gets the Active Directory groups that have a specified user, computer, or group.
+description: "Gets the Active Directory groups that have a specified user, computer, or group."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_principal_group_membership
+name: "get_ad_principal_group_membership"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADPrincipalGroupMembership
+    default: "Get-ADPrincipalGroupMembership"
     immutable: true
   args:
     type: string

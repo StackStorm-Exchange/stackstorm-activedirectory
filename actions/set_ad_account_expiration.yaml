@@ -1,13 +1,13 @@
 ---
-description: Sets the expiration date for an Active Directory account.
+description: "Sets the expiration date for an Active Directory account."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: set_ad_account_expiration
+name: "set_ad_account_expiration"
 parameters:
   cmdlet:
     type: string
-    default: Set-ADAccountExpiration
+    default: "Set-ADAccountExpiration"
     immutable: true
   args:
     type: string

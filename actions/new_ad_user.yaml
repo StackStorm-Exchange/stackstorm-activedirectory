@@ -1,13 +1,13 @@
 ---
-description: Creates a new Active Directory user.
+description: "Creates a new Active Directory user."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: new_ad_user
+name: "new_ad_user"
 parameters:
   cmdlet:
     type: string
-    default: New-ADUser
+    default: "New-ADUser"
     immutable: true
   args:
     type: string

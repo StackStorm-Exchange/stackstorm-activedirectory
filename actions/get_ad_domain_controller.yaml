@@ -1,13 +1,13 @@
 ---
-description: Gets one or more Active Directory domain controllers, based on discoverable services criteria, search parameters, or by providing a domain controller identifier, such as the NetBIOS name.
+description: "Gets one or more Active Directory domain controllers, based on discoverable services criteria, search parameters, or by providing a domain controller identifier, such as the NetBIOS name."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_domain_controller
+name: "get_ad_domain_controller"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADDomainController
+    default: "Get-ADDomainController"
     immutable: true
   args:
     type: string

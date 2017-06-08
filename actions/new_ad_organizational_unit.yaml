@@ -1,13 +1,13 @@
 ---
-description: Creates a new Active Directory OU.
+description: "Creates a new Active Directory OU."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: new_ad_organizational_unit
+name: "new_ad_organizational_unit"
 parameters:
   cmdlet:
     type: string
-    default: New-ADOrganizationalUnit
+    default: "New-ADOrganizationalUnit"
     immutable: true
   args:
     type: string

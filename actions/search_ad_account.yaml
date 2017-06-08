@@ -1,13 +1,13 @@
 ---
-description: Gets Active Directory user, computer, and service accounts.
+description: "Gets Active Directory user, computer, and service accounts."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: search_ad_account
+name: "search_ad_account"
 parameters:
   cmdlet:
     type: string
-    default: Search-ADAccount
+    default: "Search-ADAccount"
     immutable: true
   args:
     type: string

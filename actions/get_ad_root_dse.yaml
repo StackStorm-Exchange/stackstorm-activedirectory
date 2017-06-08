@@ -1,13 +1,13 @@
 ---
-description: Gets the root of a domain controller information tree.
+description: "Gets the root of a domain controller information tree."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: get_ad_root_dse
+name: "get_ad_root_dse"
 parameters:
   cmdlet:
     type: string
-    default: Get-ADRootDSE
+    default: "Get-ADRootDSE"
     immutable: true
   args:
     type: string

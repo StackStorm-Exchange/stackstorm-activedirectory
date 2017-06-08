@@ -1,13 +1,13 @@
 ---
-description: Clears the expiration date for an Active Directory account.
+description: "Clears the expiration date for an Active Directory account."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: clear_ad_account_expiration
+name: "clear_ad_account_expiration"
 parameters:
   cmdlet:
     type: string
-    default: Clear-ADAccountExpiration
+    default: "Clear-ADAccountExpiration"
     immutable: true
   args:
     type: string

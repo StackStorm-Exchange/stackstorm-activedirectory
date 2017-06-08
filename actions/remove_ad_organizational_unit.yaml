@@ -1,13 +1,13 @@
 ---
-description: Removes an Active Directory OU.
+description: "Removes an Active Directory OU."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: remove_ad_organizational_unit
+name: "remove_ad_organizational_unit"
 parameters:
   cmdlet:
     type: string
-    default: Remove-ADOrganizationalUnit
+    default: "Remove-ADOrganizationalUnit"
     immutable: true
   args:
     type: string

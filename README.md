@@ -106,7 +106,6 @@ TODO: Describe sensor
 
 
 # TODOs
-- Actions for remaining cmdlets in the AD module
 - Tests (mock) for WinRM connection and cmdlets
 - Complete this readme file with comprehensive documentation
 - Workflow to install RSAT toos

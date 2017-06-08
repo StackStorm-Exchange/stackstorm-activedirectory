@@ -1,13 +1,13 @@
 ---
-description: Modifies user account control (UAC) values for an Active Directory account.
+description: "Modifies user account control (UAC) values for an Active Directory account."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: set_ad_account_control
+name: "set_ad_account_control"
 parameters:
   cmdlet:
     type: string
-    default: Set-ADAccountControl
+    default: "Set-ADAccountControl"
     immutable: true
   args:
     type: string

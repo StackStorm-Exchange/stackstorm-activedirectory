@@ -1,13 +1,13 @@
 ---
-description: {{ description }}
+description: "{{ description }}"
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: {{ cmdlet_snake_case }}
+name: "{{ cmdlet_snake_case }}"
 parameters:
   cmdlet:
     type: string
-    default: {{ cmdlet_camel_case }}
+    default: "{{ cmdlet_camel_case }}"
     immutable: true
   args:
     type: string

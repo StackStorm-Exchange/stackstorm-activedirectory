@@ -1,13 +1,13 @@
 ---
-description: Sets the forest mode for an Active Directory forest.
+description: "Sets the forest mode for an Active Directory forest."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: set_ad_forest_mode
+name: "set_ad_forest_mode"
 parameters:
   cmdlet:
     type: string
-    default: Set-ADForestMode
+    default: "Set-ADForestMode"
     immutable: true
   args:
     type: string

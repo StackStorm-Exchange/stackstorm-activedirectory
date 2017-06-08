@@ -1,13 +1,13 @@
 ---
-description: Enables an Active Directory optional feature.
+description: "Enables an Active Directory optional feature."
 enabled: true
 runner_type: "python-script"
 entry_point: run_cmdlet.py
-name: enable_ad_optional_feature
+name: "enable_ad_optional_feature"
 parameters:
   cmdlet:
     type: string
-    default: Enable-ADOptionalFeature
+    default: "Enable-ADOptionalFeature"
     immutable: true
   args:
     type: string
