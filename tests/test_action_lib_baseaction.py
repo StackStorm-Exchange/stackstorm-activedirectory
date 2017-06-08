@@ -207,7 +207,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                                       hostname='abc')
 
         connection.run_ps.assert_called_with(powershell)
-        
+
         self.assertEqual(result[0], True)
         self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
@@ -230,7 +230,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                                       hostname='abc')
 
         connection.run_ps.assert_called_with(powershell)
-        
+
         self.assertEqual(result[0], False)
         self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
@@ -260,7 +260,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                                       hostname='abc')
 
         connection.run_ps.assert_called_with(powershell)
-        
+
         self.assertEqual(result[0], True)
         self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
