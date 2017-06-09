@@ -106,20 +106,20 @@ class BaseAction(Action):
         resolved_transport = None
         resolved_port = None
 
-        if 'port' in kwargs:
+        if 'port' in kwargs and kwargs['port']:
             resolved_port = kwargs['port']
-        elif 'port' in connect_creds:
+        elif 'port' in connect_creds and connect_creds['port']:
             resolved_port = connect_creds['port']
-        elif 'port' in self.config:
+        elif 'port' in self.config and self.config['port']:
             resolved_port = self.config['port']
         else:
             resolved_port = BaseAction.default_port()
 
-        if 'transport' in kwargs:
+        if 'transport' in kwargs and kwargs['transport']:
             resolved_transport = kwargs['transport']
-        elif 'transport' in connect_creds:
+        elif 'transport' in connect_creds and connect_creds['transport']:
             resolved_transport = connect_creds['transport']
-        elif 'transport' in self.config:
+        elif 'transport' in self.config and self.config['transport']:
             resolved_transport = self.config['transport']
         else:
             resolved_transport = BaseAction.default_transport()
