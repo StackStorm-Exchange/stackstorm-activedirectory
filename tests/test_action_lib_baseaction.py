@@ -190,6 +190,14 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         resolved = action.resolve_transport({})
         self.assertEqual(resolved, expected)
 
+    def test_resolve_transport_kwargs_none(self):
+        action = self.get_action_instance(self.config_good)
+        config_tport = self.config_good
+        expected = {'transport': config_tport['transport'],
+                    'port': config_tport['port']}
+        resolved = action.resolve_transport(expected, transport=None, port=None)
+        self.assertEqual(resolved, expected)
+
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet(self, connection):
         connection.run_ps.return_value.std_out = "cmdlet standard ouput"
