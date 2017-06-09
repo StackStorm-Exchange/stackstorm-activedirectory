@@ -22,12 +22,19 @@ has the following setup:
 2. Install Remote Server Administration Tools (RSAT) tools for ActiveDirectory
    Install the "Active Directory Domain Services (AD DS) Tools and Active 
    Directory Lightweight Directory Services (AD LDS) Tools" component of
-   RSAT tools on all hosts that this pack will be running commands on.
+   RSAT on all hosts that this pack will be running commands on.
    **Note** : This only works on Windows Server OSes.
-   ``` PowerShell
-   Import-Module Servermanager
-   Install-WindowsFeature -Name RSAT-AD-PowerShell
-   ```
+   
+### Manual Install
+``` PowerShell
+Import-Module Servermanager
+Install-WindowsFeature -Name RSAT-AD-PowerShell
+```
+   
+### Install using st2 action (from this pack)
+``` shell
+st2 run activedirectory.install_rsat_ad_powershell hostname='remotehost.domain.com' username='xxx' password='xxx'
+```
 
 ## <a name="Installation"></a> Installation
 Currently this pack is in incubation, so installation must be performed from the 
@@ -183,6 +190,7 @@ Below is a list of the currently implemented actions based on cmdlets.
 | set_ad_user | [Set-ADUser](https://technet.microsoft.com/en-us/itpro/powershell/windows/addsadministration/set-aduser)  | Modifies an Active Directory user. |
 | uninstall_ad_service_account | [Uninstall-ADServiceAccount](https://technet.microsoft.com/en-us/itpro/powershell/windows/addsadministration/uninstall-adserviceaccount)  | Uninstalls an Active Directory service account from a computer. |
 | unlock_ad_account | [Unlock-ADAccount](https://technet.microsoft.com/en-us/itpro/powershell/windows/addsadministration/unlock-adaccount)  | Unlocks an Active Directory account. |
+| install_rsat_ad_powershell | [Install-WindowsFeature -Name RSAT-AD-PowerShell](https://technet.microsoft.com/en-us/itpro/powershell/windows/servermanager/install-windowsfeature)  | Installs RSAT Tools Active Directory PowerShell module. |
 
 
 ## <a name="Usage"></a> Usage
@@ -443,10 +451,6 @@ activedirectory:
 # will use transport='ntlm' and port=5986 from the pack's built-in defaults
 st2 run activedirectory.get_ad_computer args='COMPUTERTOFIND' hostname='devhost.domain.tld' credential_name=test'
 ```
-
-
-# <a name="TODOs"></a> TODOs
-- Action/Workflow to install RSAT tools (assuming WinRM is configured)
 
 # <a name="FutureIdeas"></a> Future Ideas
 -  Create action to install Active Directory
