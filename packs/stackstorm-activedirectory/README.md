@@ -10,6 +10,43 @@ It is designed to mimic the Active Directory Cmdlets for PowerShell:
 - [Server 2012 Docs](https://technet.microsoft.com/en-us/library/ee617195.aspx)
 - [Server 2016 Docs](https://technet.microsoft.com/en-us/itpro/powershell/windows/addsadministration/activedirectory)
 
+This pack works by executing Active Driectory PowerShell commands on a remote 
+windows hosts.
+
+
+# <a name="QuickStart"></a> Quick Start
+
+
+**Steps**
+
+1. Install the pack
+
+    ``` shell
+    st2 pack install activedirectory
+    ```
+
+2. Configure WinRM on a remote Windows host by running the [setup PowerShell
+   script](https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1) 
+   
+   ``` PowerShell
+   Invoke-WebRequest https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -OutFile "ConfigureRemotingForAnsible.ps1"
+   .\ConfigureRemotingForAnsible.ps1
+   ```
+  
+3. Install Remote Server Administration Tools (RSAT):
+
+    ``` shell
+    st2 run activedirectory.install_rsat_ad_powershell hostname='remotehost.domain.com' username='Administrator' password='xxx'
+    ```
+
+4. Execute an action (example: check if HOSTTOGET is a member of AD)
+
+    ``` shell
+    st2 run activedirectory.get_ad_computer hostname='remotehost.domain.com' username='Administrator' password='xxx' args='HOSTTOGET'
+    ```
+
+
+
 ## <a name="Prerequisites"></a> Prerequisites
 This pack works by executing PowerShell commands on a remote Windows host that 
 has the following setup:
