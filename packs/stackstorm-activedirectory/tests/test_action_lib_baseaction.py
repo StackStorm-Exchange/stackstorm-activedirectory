@@ -250,18 +250,6 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         resolved = action.resolve_output_ps(output='json')
         self.assertEqual(resolved, expected)
 
-    def test_resolve_output_ps_csv(self):
-        action = self.get_action_instance(self.config_blank)
-        expected = self.get_output_ps_code('csv')
-        resolved = action.resolve_output_ps(output='csv')
-        self.assertEqual(resolved, expected)
-
-    def test_resolve_output_ps_xml(self):
-        action = self.get_action_instance(self.config_blank)
-        expected = self.get_output_ps_code('xml')
-        resolved = action.resolve_output_ps(output='xml')
-        self.assertEqual(resolved, expected)
-
     def test_resolve_output_ps_config_missing(self):
         action = self.get_action_instance(self.config_blank)
         with self.assertRaises(LookupError):
@@ -436,8 +424,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
         self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
-        self.assertEqual(result[1]['stdout_dict'], {})
-        self.assertEqual(result[1]['stderr_dict'], {})
+        self.assertEqual(result[1]['stdout_dict'], '')
+        self.assertEqual(result[1]['stderr_dict'], '')
 
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_cmdlet_credentials_json(self, connection):
@@ -474,119 +462,3 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                          json.loads(connection.run_ps.return_value.std_out))
         self.assertEqual(result[1]['stderr_dict'],
                          json.loads(connection.run_ps.return_value.std_err))
-
-    @patch('lib.winrm_connection.WinRmConnection')
-    def test_run_ad_cmdlet_csv(self, connection):
-        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
-        connection.run_ps.return_value.std_err = "cmdlet standard error"
-        connection.run_ps.return_value.status_code = 0
-
-        action = self.get_action_instance(self.config_good)
-        action.connection = connection
-
-        cmdlet = 'Test-Cmdlet'
-        cmdlet_args = ''
-        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
-        powershell = self.get_output_ps_code('csv').format(powershell)
-        result = action.run_ad_cmdlet(cmdlet,
-                                      credential_name='base',
-                                      hostname='abc',
-                                      output='csv')
-
-        connection.run_ps.assert_called_with(powershell)
-
-        self.assertEqual(result[0], True)
-        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
-        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
-        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
-
-    @patch('lib.winrm_connection.WinRmConnection')
-    def test_run_ad_cmdlet_cmdlet_credentials_csv(self, connection):
-        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
-        connection.run_ps.return_value.std_err = "cmdlet standard error"
-        connection.run_ps.return_value.status_code = 0
-
-        action = self.get_action_instance(self.config_good)
-        action.connection = connection
-
-        cmdlet = 'Test-Cmdlet'
-        cmdlet_args = ''
-        powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
-                      "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
-                      "{0} -Credential $admincreds {1}"
-                      "").format(cmdlet,
-                                 cmdlet_args,
-                                 self.config_good['activedirectory']['base']['username'],
-                                 self.config_good['activedirectory']['base']['password'])
-
-        powershell = self.get_output_ps_code('csv').format(powershell)
-        result = action.run_ad_cmdlet(cmdlet,
-                                      credential_name='base',
-                                      cmdlet_credential_name='base',
-                                      hostname='abc',
-                                      output='csv')
-
-        connection.run_ps.assert_called_with(powershell)
-
-        self.assertEqual(result[0], True)
-        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
-        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
-        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
-
-    @patch('lib.winrm_connection.WinRmConnection')
-    def test_run_ad_cmdlet_xml(self, connection):
-        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
-        connection.run_ps.return_value.std_err = "cmdlet standard error"
-        connection.run_ps.return_value.status_code = 0
-
-        action = self.get_action_instance(self.config_good)
-        action.connection = connection
-
-        cmdlet = 'Test-Cmdlet'
-        cmdlet_args = ''
-        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
-        powershell = self.get_output_ps_code('xml').format(powershell)
-        result = action.run_ad_cmdlet(cmdlet,
-                                      credential_name='base',
-                                      hostname='abc',
-                                      output='xml')
-
-        connection.run_ps.assert_called_with(powershell)
-
-        self.assertEqual(result[0], True)
-        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
-        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
-        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
-
-    @patch('lib.winrm_connection.WinRmConnection')
-    def test_run_ad_cmdlet_cmdlet_credentials_xml(self, connection):
-        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
-        connection.run_ps.return_value.std_err = "cmdlet standard error"
-        connection.run_ps.return_value.status_code = 0
-
-        action = self.get_action_instance(self.config_good)
-        action.connection = connection
-
-        cmdlet = 'Test-Cmdlet'
-        cmdlet_args = ''
-        powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
-                      "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
-                      "{0} -Credential $admincreds {1}"
-                      "").format(cmdlet,
-                                 cmdlet_args,
-                                 self.config_good['activedirectory']['base']['username'],
-                                 self.config_good['activedirectory']['base']['password'])
-
-        powershell = self.get_output_ps_code('xml').format(powershell)
-        result = action.run_ad_cmdlet(cmdlet,
-                                      credential_name='base',
-                                      cmdlet_credential_name='base',
-                                      hostname='abc',
-                                      output='xml')
-
-        connection.run_ps.assert_called_with(powershell)
-
-        self.assertEqual(result[0], True)
-        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
-        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
-        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
