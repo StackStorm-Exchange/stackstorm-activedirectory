@@ -1,7 +1,7 @@
 from activedirectory_base_action_test_case import ActiveDirectoryBaseActionTestCase
 from run_cmdlet import RunCmdlet
 from mock import patch
-import unittest
+
 
 class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
     __test__ = True
@@ -230,7 +230,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         else:
             output_ps = "{0}"
         return output_ps
-    
+
     def test_resolve_output_ps_config(self):
         action = self.get_action_instance(self.config_good)
         expected = self.get_output_ps_code(self.config_good['output'])
@@ -264,7 +264,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         action = self.get_action_instance(self.config_partial)
         with self.assertRaises(LookupError):
             action.resolve_output_ps(output='invalid')
-            
+
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet(self, connection):
         connection.run_ps.return_value.std_out = "cmdlet standard ouput"
@@ -344,7 +344,6 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
         self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
 
-
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_json(self, connection):
         connection.run_ps.return_value.std_out = "cmdlet standard ouput"
@@ -376,7 +375,6 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
         self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
-
 
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_cmdlet_credentials_json(self, connection):
@@ -449,7 +447,6 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
         self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
 
-
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_cmdlet_credentials_csv(self, connection):
         connection.run_ps.return_value.std_out = "cmdlet standard ouput"
@@ -520,7 +517,6 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
         self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
-
 
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_cmdlet_credentials_xml(self, connection):
