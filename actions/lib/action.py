@@ -206,6 +206,7 @@ class BaseAction(Action):
                          "{{\n"
                          "  $formatted_output = ConvertTo-Json -InputObject $_\n"
                          "  $host.ui.WriteErrorLine($formatted_output)\n"
+                         "  exit 1\n"
                          "}}")
         elif output == 'csv':
             output_ps = ("Try\n"
@@ -216,6 +217,7 @@ class BaseAction(Action):
                          "{{\n"
                          "  $formatted_output = ConvertTo-Csv -InputObject $_\n"
                          "  $host.ui.WriteErrorLine($formatted_output)\n"
+                         "  exit 1\n"
                          "}}")
         elif output == 'xml':
             output_ps = ("Try\n"
@@ -226,6 +228,7 @@ class BaseAction(Action):
                          "{{\n"
                          "  $formatted_output = ConvertTo-Xml -InputObject $_\n"
                          "  $host.ui.WriteErrorLine($formatted_output)\n"
+                         "  exit 1\n"
                          "}}")
         elif output == 'raw':
             output_ps = "{0}"
