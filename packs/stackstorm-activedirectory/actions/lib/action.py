@@ -198,7 +198,7 @@ class BaseAction(Action):
                          "}}\n"
                          "Catch\n"
                          "{{\n"
-                         "  ConvertTo-Json -InputObject $_\n"
+                         "  Write-Error (ConvertTo-Json -InputObject $_)\n"
                          "}}")
         elif output == 'csv':
             output_ps = ("Try\n"
@@ -207,7 +207,7 @@ class BaseAction(Action):
                          "}}\n"
                          "Catch\n"
                          "{{\n"
-                         "  ConvertTo-Csv -InputObject $_\n"
+                         "  Write-Error (ConvertTo-Csv -InputObject $_)\n"
                          "}}")
         elif output == 'xml':
             output_ps = ("Try\n"
@@ -216,7 +216,7 @@ class BaseAction(Action):
                          "}}\n"
                          "Catch\n"
                          "{{\n"
-                         "  ConvertTo-Xml -InputObject $_\n"
+                         "  Write-Error (ConvertTo-Xml -InputObject $_)\n"
                          "}}")
         elif output == 'raw':
             output_ps = "{0}"
