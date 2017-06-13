@@ -1,5 +1,6 @@
 from winrm_connection import WinRmConnection
 from st2actions.runners.pythonrunner import Action
+import json
 
 # Note:  in order for this to work you need to run the following script on the
 # host
@@ -229,6 +230,36 @@ class BaseAction(Action):
 
         return output_ps
 
+    def parse_output(self, output_str, **kwargs):
+        parsed_output = {}
+        output = self.get_arg('output', **kwargs)
+        from_config = False
+        if not output:
+            if 'output' in self.config:
+                output = self.config['output']
+                from_config = True
+            else:
+                raise LookupError("'output' parameter not found on action AND "
+                                  "'output' option is missing in config!")
+
+        if output == 'json':
+            parsed_output = json.loads(output_str)
+        elif output == 'csv':
+            parsed_output = output_str
+        elif output == 'xml':
+            parsed_output = output_str
+        elif output == 'raw':
+            parsed_output = output_str
+        else:
+            if from_config:
+                raise LookupError("Unknown 'output' type [{0}] from config "
+                                  "(valid = json, csv, xml, raw)".format(output))
+            else:
+                raise LookupError("Unknown 'output' type [{0}] from action parameter "
+                                  "(valid = json, csv, xml, raw)".format(output))
+
+        return parsed_output
+
     def run_ad_cmdlet(self, cmdlet, **kwargs):
         """Runs an Active Directory cmdlet on a remote host.
         :param cmdlet: cmdlet to execut on remote host
@@ -260,7 +291,9 @@ class BaseAction(Action):
         ps_result = self.connection.run_ps(powershell)
         result = {'stdout': ps_result.std_out,
                   'stderr': ps_result.std_err,
-                  'exit_status': ps_result.status_code}
+                  'exit_status': ps_result.status_code,
+                  'stdout_dict': self.parse_output(ps_result.std_out, **kwargs),
+                  'stderr_dict': self.parse_output(ps_result.std_err, **kwargs)}
 
         if result['exit_status'] == 0:
             return (True, result)
