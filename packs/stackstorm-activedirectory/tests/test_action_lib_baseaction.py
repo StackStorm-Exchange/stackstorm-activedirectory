@@ -424,8 +424,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
         self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
-        self.assertEqual(result[1]['stdout_dict'], '')
-        self.assertEqual(result[1]['stderr_dict'], '')
+        self.assertEqual(result[1]['stdout_dict'], {})
+        self.assertEqual(result[1]['stderr_dict'], {})
 
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_cmdlet_credentials_json(self, connection):
