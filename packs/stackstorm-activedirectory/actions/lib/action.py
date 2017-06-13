@@ -191,6 +191,12 @@ class BaseAction(Action):
                 raise LookupError("'output' parameter not found on action AND "
                                   "'output' option is missing in config!")
 
+        # @note not using Write-Error here because it prints out the full
+        # error object instead of just the message to stdout (this screws
+        # up our parsing from JSON).
+        # Instead we use a method found here to utilizes another function
+        # to write just a string to stderr
+        # https://stackoverflow.com/questions/4998173/how-do-i-write-to-standard-error-in-powershell/15669365#15669365
         if output == 'json':
             output_ps = ("Try\n"
                          "{{\n"
@@ -198,7 +204,8 @@ class BaseAction(Action):
                          "}}\n"
                          "Catch\n"
                          "{{\n"
-                         "  Write-Error (ConvertTo-Json -InputObject $_)\n"
+                         "  $formatted_output = ConvertTo-Json -InputObject $_\n"
+                         "  $host.ui.WriteErrorLine($formatted_output)\n"
                          "}}")
         elif output == 'csv':
             output_ps = ("Try\n"
@@ -207,7 +214,8 @@ class BaseAction(Action):
                          "}}\n"
                          "Catch\n"
                          "{{\n"
-                         "  Write-Error (ConvertTo-Csv -InputObject $_)\n"
+                         "  $formatted_output = ConvertTo-Csv -InputObject $_\n"
+                         "  $host.ui.WriteErrorLine($formatted_output)\n"
                          "}}")
         elif output == 'xml':
             output_ps = ("Try\n"
@@ -216,7 +224,8 @@ class BaseAction(Action):
                          "}}\n"
                          "Catch\n"
                          "{{\n"
-                         "  Write-Error (ConvertTo-Xml -InputObject $_)\n"
+                         "  $formatted_output = ConvertTo-Xml -InputObject $_\n"
+                         "  $host.ui.WriteErrorLine($formatted_output)\n"
                          "}}")
         elif output == 'raw':
             output_ps = "{0}"

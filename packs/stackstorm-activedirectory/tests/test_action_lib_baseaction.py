@@ -208,7 +208,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                          "}}\n"
                          "Catch\n"
                          "{{\n"
-                         "  ConvertTo-Json -InputObject $_\n"
+                         "  $formatted_output = ConvertTo-Json -InputObject $_\n"
+                         "  $host.ui.WriteErrorLine($formatted_output)\n"
                          "}}")
         elif output == 'csv':
             output_ps = ("Try\n"
@@ -217,7 +218,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                          "}}\n"
                          "Catch\n"
                          "{{\n"
-                         "  ConvertTo-Csv -InputObject $_\n"
+                         "  $formatted_output = ConvertTo-Csv -InputObject $_\n"
+                         "  $host.ui.WriteErrorLine($formatted_output)\n"
                          "}}")
         elif output == 'xml':
             output_ps = ("Try\n"
@@ -226,7 +228,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                          "}}\n"
                          "Catch\n"
                          "{{\n"
-                         "  ConvertTo-Xml -InputObject $_\n"
+                         "  $formatted_output = ConvertTo-Xml -InputObject $_\n"
+                         "  $host.ui.WriteErrorLine($formatted_output)\n"
                          "}}")
         else:
             output_ps = "{0}"
@@ -357,14 +360,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
         powershell = "{0} {1}".format(cmdlet, cmdlet_args)
-        powershell = ("Try\n"
-                      "{{\n"
-                      "  {0} | ConvertTo-Json\n"
-                      "}}\n"
-                      "Catch\n"
-                      "{{\n"
-                      "  ConvertTo-Json -InputObject $_\n"
-                      "}}").format(powershell)
+        powershell = self.get_output_ps_code('json').format(powershell)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       hostname='abc',
@@ -425,14 +421,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
         powershell = "{0} {1}".format(cmdlet, cmdlet_args)
-        powershell = ("Try\n"
-                      "{{\n"
-                      "  {0} | ConvertTo-Json\n"
-                      "}}\n"
-                      "Catch\n"
-                      "{{\n"
-                      "  ConvertTo-Json -InputObject $_\n"
-                      "}}").format(powershell)
+        powershell = self.get_output_ps_code('json').format(powershell)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       hostname='abc',
@@ -465,14 +454,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                                  cmdlet_args,
                                  self.config_good['activedirectory']['base']['username'],
                                  self.config_good['activedirectory']['base']['password'])
-        powershell = ("Try\n"
-                      "{{\n"
-                      "  {0} | ConvertTo-Json\n"
-                      "}}\n"
-                      "Catch\n"
-                      "{{\n"
-                      "  ConvertTo-Json -InputObject $_\n"
-                      "}}").format(powershell)
+        powershell = self.get_output_ps_code('json').format(powershell)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       cmdlet_credential_name='base',
@@ -502,14 +484,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
         powershell = "{0} {1}".format(cmdlet, cmdlet_args)
-        powershell = ("Try\n"
-                      "{{\n"
-                      "  {0} | ConvertTo-Csv\n"
-                      "}}\n"
-                      "Catch\n"
-                      "{{\n"
-                      "  ConvertTo-Csv -InputObject $_\n"
-                      "}}").format(powershell)
+        powershell = self.get_output_ps_code('csv').format(powershell)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       hostname='abc',
@@ -540,14 +515,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                                  cmdlet_args,
                                  self.config_good['activedirectory']['base']['username'],
                                  self.config_good['activedirectory']['base']['password'])
-        powershell = ("Try\n"
-                      "{{\n"
-                      "  {0} | ConvertTo-Csv\n"
-                      "}}\n"
-                      "Catch\n"
-                      "{{\n"
-                      "  ConvertTo-Csv -InputObject $_\n"
-                      "}}").format(powershell)
+
+        powershell = self.get_output_ps_code('csv').format(powershell)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       cmdlet_credential_name='base',
@@ -573,14 +542,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
         powershell = "{0} {1}".format(cmdlet, cmdlet_args)
-        powershell = ("Try\n"
-                      "{{\n"
-                      "  {0} | ConvertTo-Xml\n"
-                      "}}\n"
-                      "Catch\n"
-                      "{{\n"
-                      "  ConvertTo-Xml -InputObject $_\n"
-                      "}}").format(powershell)
+        powershell = self.get_output_ps_code('xml').format(powershell)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       hostname='abc',
@@ -611,14 +573,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                                  cmdlet_args,
                                  self.config_good['activedirectory']['base']['username'],
                                  self.config_good['activedirectory']['base']['password'])
-        powershell = ("Try\n"
-                      "{{\n"
-                      "  {0} | ConvertTo-Xml\n"
-                      "}}\n"
-                      "Catch\n"
-                      "{{\n"
-                      "  ConvertTo-Xml -InputObject $_\n"
-                      "}}").format(powershell)
+
+        powershell = self.get_output_ps_code('xml').format(powershell)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       cmdlet_credential_name='base',
