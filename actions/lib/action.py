@@ -208,42 +208,20 @@ class BaseAction(Action):
                          "  $host.ui.WriteErrorLine($formatted_output)\n"
                          "  exit 1\n"
                          "}}")
-        elif output == 'csv':
-            output_ps = ("Try\n"
-                         "{{\n"
-                         "  {0} | ConvertTo-Csv\n"
-                         "}}\n"
-                         "Catch\n"
-                         "{{\n"
-                         "  $formatted_output = ConvertTo-Csv -InputObject $_\n"
-                         "  $host.ui.WriteErrorLine($formatted_output)\n"
-                         "  exit 1\n"
-                         "}}")
-        elif output == 'xml':
-            output_ps = ("Try\n"
-                         "{{\n"
-                         "  {0} | ConvertTo-Xml\n"
-                         "}}\n"
-                         "Catch\n"
-                         "{{\n"
-                         "  $formatted_output = ConvertTo-Xml -InputObject $_\n"
-                         "  $host.ui.WriteErrorLine($formatted_output)\n"
-                         "  exit 1\n"
-                         "}}")
         elif output == 'raw':
             output_ps = "{0}"
         else:
             if from_config:
                 raise LookupError("Unknown 'output' type [{0}] from config "
-                                  "(valid = json, csv, xml, raw)".format(output))
+                                  "(valid = json, raw)".format(output))
             else:
                 raise LookupError("Unknown 'output' type [{0}] from action parameter "
-                                  "(valid = json, csv, xml, raw)".format(output))
+                                  "(valid = json, raw)".format(output))
 
         return output_ps
 
     def parse_output(self, output_str, **kwargs):
-        parsed_output = {}
+        parsed_output = ""
         if not output_str:
             return parsed_output
 
@@ -259,19 +237,15 @@ class BaseAction(Action):
 
         if output == 'json':
             parsed_output = json.loads(output_str)
-        elif output == 'csv':
-            parsed_output = output_str
-        elif output == 'xml':
-            parsed_output = output_str
         elif output == 'raw':
-            parsed_output = output_str
+            parsed_output = ""
         else:
             if from_config:
                 raise LookupError("Unknown 'output' type [{0}] from config "
-                                  "(valid = json, csv, xml, raw)".format(output))
+                                  "(valid = json, raw)".format(output))
             else:
                 raise LookupError("Unknown 'output' type [{0}] from action parameter "
-                                  "(valid = json, csv, xml, raw)".format(output))
+                                  "(valid = json, raw)".format(output))
 
         return parsed_output
 
