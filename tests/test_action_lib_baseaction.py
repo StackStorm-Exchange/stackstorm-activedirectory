@@ -1,7 +1,7 @@
 from activedirectory_base_action_test_case import ActiveDirectoryBaseActionTestCase
 from run_cmdlet import RunCmdlet
 from mock import patch
-
+import unittest
 
 class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
     __test__ = True
@@ -198,6 +198,73 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         resolved = action.resolve_transport(expected, transport=None, port=None)
         self.assertEqual(resolved, expected)
 
+    def get_output_ps_code(self, output):
+        output_ps = ""
+        if output == 'json':
+            output_ps = ("Try\n"
+                         "{{\n"
+                         "  {0} | ConvertTo-Json\n"
+                         "}}\n"
+                         "Catch\n"
+                         "{{\n"
+                         "  ConvertTo-Json -InputObject $_\n"
+                         "}}")
+        elif output == 'csv':
+            output_ps = ("Try\n"
+                         "{{\n"
+                         "  {0} | ConvertTo-Csv\n"
+                         "}}\n"
+                         "Catch\n"
+                         "{{\n"
+                         "  ConvertTo-Csv -InputObject $_\n"
+                         "}}")
+        elif output == 'xml':
+            output_ps = ("Try\n"
+                         "{{\n"
+                         "  {0} | ConvertTo-Xml\n"
+                         "}}\n"
+                         "Catch\n"
+                         "{{\n"
+                         "  ConvertTo-Xml -InputObject $_\n"
+                         "}}")
+        else:
+            output_ps = "{0}"
+        return output_ps
+    
+    def test_resolve_output_ps_config(self):
+        action = self.get_action_instance(self.config_good)
+        expected = self.get_output_ps_code(self.config_good['output'])
+        resolved = action.resolve_output_ps()
+        self.assertEqual(resolved, expected)
+
+    def test_resolve_output_ps_json(self):
+        action = self.get_action_instance(self.config_blank)
+        expected = self.get_output_ps_code('json')
+        resolved = action.resolve_output_ps(output='json')
+        self.assertEqual(resolved, expected)
+
+    def test_resolve_output_ps_csv(self):
+        action = self.get_action_instance(self.config_blank)
+        expected = self.get_output_ps_code('csv')
+        resolved = action.resolve_output_ps(output='csv')
+        self.assertEqual(resolved, expected)
+
+    def test_resolve_output_ps_xml(self):
+        action = self.get_action_instance(self.config_blank)
+        expected = self.get_output_ps_code('xml')
+        resolved = action.resolve_output_ps(output='xml')
+        self.assertEqual(resolved, expected)
+
+    def test_resolve_output_ps_config_missing(self):
+        action = self.get_action_instance(self.config_blank)
+        with self.assertRaises(LookupError):
+            action.resolve_output_ps()
+
+    def test_resolve_output_ps_config_invalid(self):
+        action = self.get_action_instance(self.config_partial)
+        with self.assertRaises(LookupError):
+            action.resolve_output_ps(output='invalid')
+            
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet(self, connection):
         connection.run_ps.return_value.std_out = "cmdlet standard ouput"
@@ -212,7 +279,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         powershell = "{0} {1}".format(cmdlet, cmdlet_args)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
-                                      hostname='abc')
+                                      hostname='abc',
+                                      output='raw')
 
         connection.run_ps.assert_called_with(powershell)
 
@@ -235,7 +303,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         powershell = "{0} {1}".format(cmdlet, cmdlet_args)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
-                                      hostname='abc')
+                                      hostname='abc',
+                                      output='raw')
 
         connection.run_ps.assert_called_with(powershell)
 
@@ -265,7 +334,225 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       cmdlet_credential_name='base',
-                                      hostname='abc')
+                                      hostname='abc',
+                                      output='raw')
+
+        connection.run_ps.assert_called_with(powershell)
+
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_json(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = ("Try\n"
+                      "{{\n"
+                      "  {0} | ConvertTo-Json\n"
+                      "}}\n"
+                      "Catch\n"
+                      "{{\n"
+                      "  ConvertTo-Json -InputObject $_\n"
+                      "}}").format(powershell)
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      hostname='abc',
+                                      output='json')
+
+        connection.run_ps.assert_called_with(powershell)
+
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_cmdlet_credentials_json(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
+                      "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
+                      "{0} -Credential $admincreds {1}"
+                      "").format(cmdlet,
+                                 cmdlet_args,
+                                 self.config_good['activedirectory']['base']['username'],
+                                 self.config_good['activedirectory']['base']['password'])
+        powershell = ("Try\n"
+                      "{{\n"
+                      "  {0} | ConvertTo-Json\n"
+                      "}}\n"
+                      "Catch\n"
+                      "{{\n"
+                      "  ConvertTo-Json -InputObject $_\n"
+                      "}}").format(powershell)
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      cmdlet_credential_name='base',
+                                      hostname='abc',
+                                      output='json')
+
+        connection.run_ps.assert_called_with(powershell)
+
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_csv(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = ("Try\n"
+                      "{{\n"
+                      "  {0} | ConvertTo-Csv\n"
+                      "}}\n"
+                      "Catch\n"
+                      "{{\n"
+                      "  ConvertTo-Csv -InputObject $_\n"
+                      "}}").format(powershell)
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      hostname='abc',
+                                      output='csv')
+
+        connection.run_ps.assert_called_with(powershell)
+
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_cmdlet_credentials_csv(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
+                      "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
+                      "{0} -Credential $admincreds {1}"
+                      "").format(cmdlet,
+                                 cmdlet_args,
+                                 self.config_good['activedirectory']['base']['username'],
+                                 self.config_good['activedirectory']['base']['password'])
+        powershell = ("Try\n"
+                      "{{\n"
+                      "  {0} | ConvertTo-Csv\n"
+                      "}}\n"
+                      "Catch\n"
+                      "{{\n"
+                      "  ConvertTo-Csv -InputObject $_\n"
+                      "}}").format(powershell)
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      cmdlet_credential_name='base',
+                                      hostname='abc',
+                                      output='csv')
+
+        connection.run_ps.assert_called_with(powershell)
+
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_xml(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = ("Try\n"
+                      "{{\n"
+                      "  {0} | ConvertTo-Xml\n"
+                      "}}\n"
+                      "Catch\n"
+                      "{{\n"
+                      "  ConvertTo-Xml -InputObject $_\n"
+                      "}}").format(powershell)
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      hostname='abc',
+                                      output='xml')
+
+        connection.run_ps.assert_called_with(powershell)
+
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_cmdlet_credentials_xml(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
+                      "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
+                      "{0} -Credential $admincreds {1}"
+                      "").format(cmdlet,
+                                 cmdlet_args,
+                                 self.config_good['activedirectory']['base']['username'],
+                                 self.config_good['activedirectory']['base']['password'])
+        powershell = ("Try\n"
+                      "{{\n"
+                      "  {0} | ConvertTo-Xml\n"
+                      "}}\n"
+                      "Catch\n"
+                      "{{\n"
+                      "  ConvertTo-Xml -InputObject $_\n"
+                      "}}").format(powershell)
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      cmdlet_credential_name='base',
+                                      hostname='abc',
+                                      output='xml')
 
         connection.run_ps.assert_called_with(powershell)
 

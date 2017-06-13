@@ -12,10 +12,19 @@ TRANSPORT_ITEMS = ['port', 'transport']
 class BaseAction(Action):
 
     def __init__(self, config):
+        """Creates a new BaseAction given a StackStorm config object (kwargs works too)
+        :param config: StackStorm configuration object for the pack
+        :returns: a new BaseAction
+        """
         super(BaseAction, self).__init__(config)
         self.connection = None
 
     def resolve_creds(self, **kwargs):
+        """Parses and resolves connection credentials (creds) from kwargs that
+        were passed in as parameters to the action.
+        :returns: A dict containing the 'connect' and 'cmdlet' credentials to
+        use for this action execution
+        """
         creds_config = self.create_creds_spec(**kwargs)
         creds = {}
         for key, value in creds_config.items():
@@ -23,12 +32,20 @@ class BaseAction(Action):
         return creds
 
     def get_arg(self, key, **kwargs):
+        """Attempts to retrieve an argument from kwargs with key.
+        :param key: the key of the argument to retrieve from kwargs
+        :returns: The value of key in kwargs, if it exists, otherwise None
+        """
         if key in kwargs:
             return kwargs[key]
         else:
             return None
 
     def create_creds_spec(self, **kwargs):
+        """Creates two credentials specification from all of the values in
+        kwargs, one spec for 'connection', the other for 'cmdlet'.
+        :returns: a dict of an initialized credentials spec from kwargs
+        """
         return {'connect': {'credential_name': self.get_arg('credential_name', **kwargs),
                             'username': self.get_arg('username', **kwargs),
                             'password': self.get_arg('password', **kwargs),
@@ -39,6 +56,15 @@ class BaseAction(Action):
                            'required': False}}
 
     def resolve_creds_spec(self, creds_spec):
+        """Takes a credentials sepcification and attempts to lookup varaibles
+        given the following order:
+
+        1) If they are set in the incoming creds_spec, meaning they were given
+        as an action parameter
+        2) Lookup the variable from the 'credential_name' value
+        :param creds_spec: dict of the credentials spec for this login.
+        :returns: a credentials spec dict that has been resolved given the order
+        """
         creds = {}
 
         # if the user specified the "credential_name" parameter
@@ -84,10 +110,16 @@ class BaseAction(Action):
 
     @staticmethod
     def default_transport():
+        """ Returns the default transport for this WinRM connection
+        :returns: 'ntlm'
+        """
         return 'ntlm'
 
     @staticmethod
     def default_port():
+        """ Returns the default port for this WinRM connection
+        :returns: '5986'
+        """
         return 5986
 
     def resolve_transport(self, connect_creds, **kwargs):
@@ -127,6 +159,13 @@ class BaseAction(Action):
         return {'transport': resolved_transport, 'port': resolved_port}
 
     def connect(self, hostname, transport, creds):
+        """Connects to hostname given the transport authentication method and
+        creds for login. If the connection is successful it is cached locally
+        as self.connection and reused for all commands run via run_ad_cmdlet().
+        :param hostname: Hostname to connect to
+        :param transport: Authentication method to use aka "transport" (WinRM terminology)
+        :param creds: Credentials to use for the connection
+        """
         if not self.connection:
             self.connection = WinRmConnection(hostname=hostname,
                                               port=transport['port'],
@@ -134,11 +173,72 @@ class BaseAction(Action):
                                               username=creds['username'],
                                               password=creds['password'])
 
+    def resolve_output_ps(self, **kwargs):
+        """Generates powershell code for the output format selected by
+        the action (if specified as a param, otherwise looked up in config).
+        :returns: a string (potentially empty) containing powershell code
+        that will format the output to the appropriate format.
+        """
+        output_ps = ""
+        output = self.get_arg('output', **kwargs)
+        from_config = False
+        if not output:
+            if 'output' in self.config:
+                output = self.config['output']
+                from_config = True
+            else:
+                raise LookupError("'output' parameter not found on action AND "
+                                  "'output' option is missing in config!")
+
+        if output == 'json':
+            output_ps = ("Try\n"
+                         "{{\n"
+                         "  {0} | ConvertTo-Json\n"
+                         "}}\n"
+                         "Catch\n"
+                         "{{\n"
+                         "  ConvertTo-Json -InputObject $_\n"
+                         "}}")
+        elif output == 'csv':
+            output_ps = ("Try\n"
+                         "{{\n"
+                         "  {0} | ConvertTo-Csv\n"
+                         "}}\n"
+                         "Catch\n"
+                         "{{\n"
+                         "  ConvertTo-Csv -InputObject $_\n"
+                         "}}")
+        elif output == 'xml':
+            output_ps = ("Try\n"
+                         "{{\n"
+                         "  {0} | ConvertTo-Xml\n"
+                         "}}\n"
+                         "Catch\n"
+                         "{{\n"
+                         "  ConvertTo-Xml -InputObject $_\n"
+                         "}}")
+        elif output == 'raw':
+            output_ps = "{0}"
+        else:
+            if from_config:
+                raise LookupError("Unknown 'output' type [{0}] from config "
+                                  "(valid = json, csv, xml, raw)".format(output))
+            else:
+                raise LookupError("Unknown 'output' type [{0}] from action parameter "
+                                  "(valid = json, csv, xml, raw)".format(output))
+
+        return output_ps
+
     def run_ad_cmdlet(self, cmdlet, **kwargs):
+        """Runs an Active Directory cmdlet on a remote host.
+        :param cmdlet: cmdlet to execut on remote host
+        """
         creds = self.resolve_creds(**kwargs)
         tport = self.resolve_transport(creds['connect'], **kwargs)
         powershell = ''
         cmdlet_args = kwargs['args'] if 'args' in kwargs else ''
+        output_ps = self.resolve_output_ps(**kwargs)
+
         if 'username' in creds['cmdlet'] and 'password' in creds['cmdlet']:
             powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
                           "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
@@ -149,6 +249,9 @@ class BaseAction(Action):
                                      creds['cmdlet']['password'])
         else:
             powershell = '{0} {1}'.format(cmdlet, cmdlet_args)
+
+        # add output formatters to the powershell code
+        powershell = output_ps.format(powershell)
 
         # connect to server
         self.connect(kwargs['hostname'], tport, creds['connect'])

@@ -1,6 +1,7 @@
 ---
 port: 6543
 transport: basic
+output: csv
 
 activedirectory:
   base:

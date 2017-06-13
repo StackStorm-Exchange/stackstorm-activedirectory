@@ -47,7 +47,7 @@ windows hosts.
 
 
 
-## <a name="Prerequisites"></a> Prerequisites
+# <a name="Prerequisites"></a> Prerequisites
 This pack works by executing PowerShell commands on a remote Windows host that 
 has the following setup:
 
@@ -62,25 +62,32 @@ has the following setup:
    RSAT on all hosts that this pack will be running commands on.
    **Note** : This only works on Windows Server OSes.
    
-### Manual Install
+## Manual Install
 ``` PowerShell
 Import-Module Servermanager
 Install-WindowsFeature -Name RSAT-AD-PowerShell
 ```
    
-### Install using st2 action (from this pack)
+## Install using st2 action (from this pack)
 ``` shell
 st2 run activedirectory.install_rsat_ad_powershell hostname='remotehost.domain.com' username='xxx' password='xxx'
 ```
 
-## <a name="Installation"></a> Installation
+# <a name="Installation"></a> Installation
 Currently this pack is in incubation, so installation must be performed from the 
 github page.
+
 ``` shell
 st2 pack install https://github.com/EncoreTechnologies/stackstorm-activedirectory
 ```
 
-## <a name="Configuration"></a> Configuration
+Once it is added to the exchange you can install it like so:
+
+``` shell
+st2 pack install activedirectory
+```
+
+# <a name="Configuration"></a> Configuration
 You will need to specificy Active Directory credentials that will be
 using to connect to the remote Windows hosts in the 
 `/opt/stackstorm/config/activedirectory.yaml` file. You can specificy multiple 
@@ -91,7 +98,7 @@ sets of credentials using nested values.
     `/opt/stackstorm/configs/activedirectory.yaml` then run `st2ctl reload --register-configs`
 
 
-### <a name="Schema"></a> Schema
+## <a name="Schema"></a> Schema
 
 ``` yaml
 ---
@@ -110,7 +117,7 @@ activedirectory:
   ...
 ```
     
-### <a name="SchemaExample"></a> Schema Example
+## <a name="SchemaExample"></a> Schema Example
 ``` yaml
 ---
 port: 5986
@@ -488,6 +495,12 @@ activedirectory:
 # will use transport='ntlm' and port=5986 from the pack's built-in defaults
 st2 run activedirectory.get_ad_computer args='COMPUTERTOFIND' hostname='devhost.domain.tld' credential_name=test'
 ```
+
+
+## <a name="Output"></a> Output
+Output types = json (default), csv, xml, raw
+**TODO**
+
 
 # <a name="FutureIdeas"></a> Future Ideas
 -  Create action to install Active Directory
