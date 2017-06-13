@@ -1,6 +1,7 @@
 from activedirectory_base_action_test_case import ActiveDirectoryBaseActionTestCase
 from run_cmdlet import RunCmdlet
 from mock import patch
+import json
 
 
 class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
@@ -346,8 +347,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
 
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_json(self, connection):
-        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
-        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.std_out = "{\"cmdlet\": \"standard ouput\"}"
+        connection.run_ps.return_value.std_err = "{\"cmdlet\": \"standard error\"}"
         connection.run_ps.return_value.status_code = 0
 
         action = self.get_action_instance(self.config_good)
@@ -375,11 +376,47 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
         self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+        self.assertEqual(result[1]['stdout_dict'],
+                         json.loads(connection.run_ps.return_value.std_out))
+        self.assertEqual(result[1]['stderr_dict'],
+                         json.loads(connection.run_ps.return_value.std_err))
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_json_stdout_parse_fail(self, connection):
+        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
+        connection.run_ps.return_value.std_err = "{\"cmdlet\": \"standard error\"}"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        with self.assertRaises(ValueError):
+            action.run_ad_cmdlet(cmdlet,
+                                 credential_name='base',
+                                 hostname='abc',
+                                 output='json')
+
+    @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_json_stderr_parse_fail(self, connection):
+        connection.run_ps.return_value.std_out = "{\"cmdlet\": \"standard ouput\"}"
+        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        with self.assertRaises(ValueError):
+            action.run_ad_cmdlet(cmdlet,
+                                 credential_name='base',
+                                 hostname='abc',
+                                 output='json')
 
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_cmdlet_credentials_json(self, connection):
-        connection.run_ps.return_value.std_out = "cmdlet standard ouput"
-        connection.run_ps.return_value.std_err = "cmdlet standard error"
+        connection.run_ps.return_value.std_out = "{\"cmdlet\": \"standard ouput\"}"
+        connection.run_ps.return_value.std_err = "{\"cmdlet\": \"standard error\"}"
         connection.run_ps.return_value.status_code = 0
 
         action = self.get_action_instance(self.config_good)
@@ -414,6 +451,10 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
         self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
         self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
         self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+        self.assertEqual(result[1]['stdout_dict'],
+                         json.loads(connection.run_ps.return_value.std_out))
+        self.assertEqual(result[1]['stderr_dict'],
+                         json.loads(connection.run_ps.return_value.std_err))
 
     @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_csv(self, connection):
