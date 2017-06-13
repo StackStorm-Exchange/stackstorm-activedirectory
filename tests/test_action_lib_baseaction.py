@@ -414,6 +414,40 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                                  output='json')
 
     @patch('lib.winrm_connection.WinRmConnection')
+    def test_run_ad_cmdlet_json_parse_empty(self, connection):
+        connection.run_ps.return_value.std_out = ""
+        connection.run_ps.return_value.std_err = ""
+        connection.run_ps.return_value.status_code = 0
+
+        action = self.get_action_instance(self.config_good)
+        action.connection = connection
+
+        cmdlet = 'Test-Cmdlet'
+        cmdlet_args = ''
+        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = ("Try\n"
+                      "{{\n"
+                      "  {0} | ConvertTo-Json\n"
+                      "}}\n"
+                      "Catch\n"
+                      "{{\n"
+                      "  ConvertTo-Json -InputObject $_\n"
+                      "}}").format(powershell)
+        result = action.run_ad_cmdlet(cmdlet,
+                                      credential_name='base',
+                                      hostname='abc',
+                                      output='json')
+
+        connection.run_ps.assert_called_with(powershell)
+
+        self.assertEqual(result[0], True)
+        self.assertEqual(result[1]['stdout'], connection.run_ps.return_value.std_out)
+        self.assertEqual(result[1]['stderr'], connection.run_ps.return_value.std_err)
+        self.assertEqual(result[1]['exit_status'], connection.run_ps.return_value.status_code)
+        self.assertEqual(result[1]['stdout_dict'], {})
+        self.assertEqual(result[1]['stderr_dict'], {})
+
+    @patch('lib.winrm_connection.WinRmConnection')
     def test_run_ad_cmdlet_cmdlet_credentials_json(self, connection):
         connection.run_ps.return_value.std_out = "{\"cmdlet\": \"standard ouput\"}"
         connection.run_ps.return_value.std_err = "{\"cmdlet\": \"standard error\"}"
