@@ -13,20 +13,20 @@ transport:
   required: false
 
 output:
-  description: Output format of cmdlets exected by this pack (json, csv, xml, raw) (global).
+  description: Output format of cmdlets exected by this pack (json, raw) (global).
   type: "string"
   default: 'json'
-  required: false
+  required: true
 
 activedirectory:
   type: "object"
   required: true
   patternProperties:
       "^\\w+":
-        "$ref": "#/properties/activedirectory-credentials"
+        "$ref": "#/properties/credentials"
   additionalProperties: false
 
-activedirectory-credentials:
+credentials:
   type: "object"
   properties:
     username:

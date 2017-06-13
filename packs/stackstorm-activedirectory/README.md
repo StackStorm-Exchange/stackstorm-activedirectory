@@ -498,8 +498,30 @@ st2 run activedirectory.get_ad_computer args='COMPUTERTOFIND' hostname='devhost.
 
 
 ## <a name="Output"></a> Output
-Output types = json (default), csv, xml, raw
-**TODO**
+
+In an effort to be flexible and play well with StackStorm we have coded up this 
+pack to allow for the output of the actions to be in one of the following formats:
+
+- json (default)
+- raw
+
+### <a name="JSON"></a> JSON
+
+JSON output works by appending `| ConvertTo-Json` to the end of the powershell
+cmdlet being run. This takes the resulting PowerShell object and converts it to
+JSON representation. The benefit of this is that by using JSON it allows us
+to parse it into a python `dict` and then return it from the action. This allows
+the end-user to utilize the output in a meaningful way within workflows. To utilize
+this dictionary parsed output there are two variables `stdout_dict` and `stderr_dict`
+that are populated. If no output is present an empty dictionary is returned.
+
+
+### <a name="Raw"></a> Raw
+
+Raw output is simply the stdout/stderr strings returned to you. In this case 
+the output variables `stdout` and `stderr` would be your interaction point.
+The variables `stdout_dict` and `stderr_dict` will be set to empty dictionaries.
+
 
 
 # <a name="FutureIdeas"></a> Future Ideas

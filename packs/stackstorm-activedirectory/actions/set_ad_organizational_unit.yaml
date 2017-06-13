@@ -15,7 +15,7 @@ parameters:
     required: false
   output:
     type: string
-    description: "Output format of data turned by cmdlet (json, csv, xml, raw, empty defaults to value in config)."
+    description: "Output format of data turned by cmdlet (json, raw). Unspecified defaults to value in config."
     required: false
   hostname:
     type: string
