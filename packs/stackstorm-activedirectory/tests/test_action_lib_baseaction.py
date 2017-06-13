@@ -210,6 +210,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
                          "{{\n"
                          "  $formatted_output = ConvertTo-Json -InputObject $_\n"
                          "  $host.ui.WriteErrorLine($formatted_output)\n"
+                         "  exit 1\n"
                          "}}")
         elif output == 'csv':
             output_ps = ("Try\n"
