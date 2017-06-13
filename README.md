@@ -515,6 +515,29 @@ the end-user to utilize the output in a meaningful way within workflows. To util
 this dictionary parsed output there are two variables `stdout_dict` and `stderr_dict`
 that are populated. If no output is present an empty dictionary is returned.
 
+**Example Mistral workflow usage:**
+
+``` yaml
+version: '2.0'
+
+activedirectory.json-example:
+    description: Workflow demoing the json parsed output
+    type: direct
+    input:
+        - hostname
+        - username
+        - password
+        - computer
+    output:
+        dns_hostname: <% $.dns_hostname %>
+    tasks:
+        task1:
+            action: activedirectory.get_ad_computer hostname=<% $.hostname %> args="<% $.computer %>" username=<% $.username %> password=<% $.password %> cmdlet_username=<% $.username %> cmdlet_password=<% $.password %>
+            publish:
+                dns_hostname: <% task(task1).result.result.stdout_dict.DNSHostName %>
+                stderr_dict: <% task(task1).result.result.stderr_dict %>
+```
+
 
 ### <a name="Raw"></a> Raw
 

@@ -221,7 +221,7 @@ class BaseAction(Action):
         return output_ps
 
     def parse_output(self, output_str, **kwargs):
-        parsed_output = ""
+        parsed_output = {}
         if not output_str:
             return parsed_output
 
@@ -238,7 +238,7 @@ class BaseAction(Action):
         if output == 'json':
             parsed_output = json.loads(output_str)
         elif output == 'raw':
-            parsed_output = ""
+            parsed_output = {}
         else:
             if from_config:
                 raise LookupError("Unknown 'output' type [{0}] from config "
