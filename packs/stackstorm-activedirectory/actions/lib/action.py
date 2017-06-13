@@ -232,6 +232,9 @@ class BaseAction(Action):
 
     def parse_output(self, output_str, **kwargs):
         parsed_output = {}
+        if not output_str:
+            return parsed_output
+
         output = self.get_arg('output', **kwargs)
         from_config = False
         if not output:
