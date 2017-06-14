@@ -10,7 +10,7 @@ It is designed to mimic the Active Directory Cmdlets for PowerShell:
 - [Server 2012 Docs](https://technet.microsoft.com/en-us/library/ee617195.aspx)
 - [Server 2016 Docs](https://technet.microsoft.com/en-us/itpro/powershell/windows/addsadministration/activedirectory)
 
-This pack works by executing Active Driectory PowerShell commands on a remote 
+This pack works by executing Active Driectory PowerShell commands on a remote
 windows hosts.
 
 
@@ -26,13 +26,13 @@ windows hosts.
     ```
 
 2. Configure WinRM on a remote Windows host by running the [setup PowerShell
-   script](https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1) 
-   
+   script](https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1)
+
    ``` PowerShell
    Invoke-WebRequest https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1 -OutFile "ConfigureRemotingForAnsible.ps1"
    .\ConfigureRemotingForAnsible.ps1
    ```
-  
+
 3. Install Remote Server Administration Tools (RSAT):
 
     ``` shell
@@ -48,33 +48,33 @@ windows hosts.
 
 
 # <a name="Prerequisites"></a> Prerequisites
-This pack works by executing PowerShell commands on a remote Windows host that 
+This pack works by executing PowerShell commands on a remote Windows host that
 has the following setup:
 
 1. WinRM needs to be configured
-   Execute the following script on all hosts that this pack will be running 
+   Execute the following script on all hosts that this pack will be running
    commands on:
    https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1
-  
+
 2. Install Remote Server Administration Tools (RSAT) tools for ActiveDirectory
-   Install the "Active Directory Domain Services (AD DS) Tools and Active 
+   Install the "Active Directory Domain Services (AD DS) Tools and Active
    Directory Lightweight Directory Services (AD LDS) Tools" component of
    RSAT on all hosts that this pack will be running commands on.
    **Note** : This only works on Windows Server OSes.
-   
+
 ## Manual Install
 ``` PowerShell
 Import-Module Servermanager
 Install-WindowsFeature -Name RSAT-AD-PowerShell
 ```
-   
+
 ## Install using st2 action (from this pack)
 ``` shell
 st2 run activedirectory.install_rsat_ad_powershell hostname='remotehost.domain.com' username='xxx' password='xxx'
 ```
 
 # <a name="Installation"></a> Installation
-Currently this pack is in incubation, so installation must be performed from the 
+Currently this pack is in incubation, so installation must be performed from the
 github page.
 
 ``` shell
@@ -89,8 +89,8 @@ st2 pack install activedirectory
 
 # <a name="Configuration"></a> Configuration
 You will need to specificy Active Directory credentials that will be
-using to connect to the remote Windows hosts in the 
-`/opt/stackstorm/config/activedirectory.yaml` file. You can specificy multiple 
+using to connect to the remote Windows hosts in the
+`/opt/stackstorm/config/activedirectory.yaml` file. You can specificy multiple
 sets of credentials using nested values.
 
 **Note** : `st2 pack config` doesn't handle nested schemas very well (known bug)
@@ -116,13 +116,13 @@ activedirectory:
     transport: <transport override to use for WinRM connections: default = 'ntlm'>
   ...
 ```
-    
+
 ## <a name="SchemaExample"></a> Schema Example
 ``` yaml
 ---
 port: 5986
 transport: ntlm
-  
+
 activedirectory:
   dev:
     username: username@dev.domain.tld
@@ -142,7 +142,7 @@ activedirectory:
     port: 1234
     transport: basic
 ```
-    
+
 **Note** : All actions allow you to specify a set of credentials as inputs
            to the action instead of requiring a configuration. See the [Actions](#Actions)
            section for more information.
@@ -246,11 +246,11 @@ cmdlet that they represent along with any arguments that are passed in via the `
 parameter on the action.
 
 ``` shell
-st2 run activedirectory.get_ad_computer args='COMPUTERTOFIND' hostname='windowshost.domain.tld' 
-st2 run activedirectory.new_ad_computer args='NEWCOMPUTER' hostname='windowshost.domain.tld' 
+st2 run activedirectory.get_ad_computer args='COMPUTERTOFIND' hostname='windowshost.domain.tld'
+st2 run activedirectory.new_ad_computer args='NEWCOMPUTER' hostname='windowshost.domain.tld'
 ```
 
-Every cmdlet action has a required `hostname` parameter that is the hostname of 
+Every cmdlet action has a required `hostname` parameter that is the hostname of
 the remote windows box that we will execute the cmdlet on. Please ensure that
 hosts have the [Prerequisites](#Prerequisites) installed properly (WinRM and RSAT tools)
 
@@ -284,7 +284,7 @@ Let's say we had a configuration file with the contents:
 ---
 port: 5986
 transport: ntlm
-  
+
 activedirectory:
   dev:
     username: username@dev.domain.tld
@@ -312,7 +312,7 @@ st2 run activedirectory.get_ad_computer args='COMPUTERTOFIND' hostname='testhost
 When executing a PowerShell cmdlet the it normally uses the credentials of
 the currently logged in user. In our case this would either be `username/password`
 or the username/password associated with the `credential_name` in the config.
-Alternativey, the cmdlets in the ActiveDirectory PowerShell module can take an 
+Alternativey, the cmdlets in the ActiveDirectory PowerShell module can take an
 optional `-Credential` parameter that is used to provide different credentials
 for the executin of the command itself (example, maybe a specific command requires
 an elevated set of priveleges). The PowerShell for a normal command looks like:
@@ -358,7 +358,7 @@ Let's say we had a configuration file with the contents:
 ---
 port: 5986
 transport: ntlm
-  
+
 activedirectory:
   dev:
     username: username@dev.domain.tld
@@ -437,7 +437,7 @@ Example config:
 ---
 port: 5986
 transport: ntlm
-  
+
 activedirectory:
   test:
     username: username@test.domain.tld
@@ -463,7 +463,7 @@ Example config:
 ---
 port: 5986
 transport: ntlm
-  
+
 activedirectory:
   test:
     username: username@test.domain.tld
@@ -499,7 +499,7 @@ st2 run activedirectory.get_ad_computer args='COMPUTERTOFIND' hostname='devhost.
 
 ## <a name="Output"></a> Output
 
-In an effort to be flexible and play well with StackStorm we have coded up this 
+In an effort to be flexible and play well with StackStorm we have coded up this
 pack to allow for the output of the actions to be in one of the following formats:
 
 - json (default)
@@ -508,7 +508,23 @@ pack to allow for the output of the actions to be in one of the following format
 ### <a name="JSON"></a> JSON
 
 JSON output works by appending `| ConvertTo-Json` to the end of the powershell
-cmdlet being run. This takes the resulting PowerShell object and converts it to
+cmdlet being run and converts any exceptions that are thrown into JSON. The
+exact code that gets executed is:
+
+``` PowerShell
+Try
+{
+  <cmdlet> | ConvertTo-Json
+}
+Catch
+{
+  $formatted_output = ConvertTo-Json -InputObject $_
+  $host.ui.WriteErrorLine($formatted_output)
+  exit 1
+}
+```
+
+This takes the resulting PowerShell object and converts it to
 JSON representation. The benefit of this is that by using JSON it allows us
 to parse it into a python `dict` and then return it from the action. This allows
 the end-user to utilize the output in a meaningful way within workflows. To utilize
@@ -538,10 +554,9 @@ activedirectory.json-example:
                 stderr_dict: <% task(task1).result.result.stderr_dict %>
 ```
 
-
 ### <a name="Raw"></a> Raw
 
-Raw output is simply the stdout/stderr strings returned to you. In this case 
+Raw output is simply the stdout/stderr strings returned to you. In this case
 the output variables `stdout` and `stderr` would be your interaction point.
 The variables `stdout_dict` and `stderr_dict` will be set to empty dictionaries.
 
@@ -552,7 +567,7 @@ The variables `stdout_dict` and `stderr_dict` will be set to empty dictionaries.
    https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-#BKMK_PS
    Active Directory Deployment Services (ADDS) cmdlets: https://technet.microsoft.com/en-us/itpro/powershell/windows/addsdeployment/addsdeployment
    ``` PowerShell
-   Import-Module ServerManager 
+   Import-Module ServerManager
    Install-WindowsFeature -IncludeManagementTools -Name AD-Domain-Services
    Import-Module ADDSDeployment
    Get-Command -Module ADDSDeployment
