@@ -88,9 +88,9 @@ st2 pack install activedirectory
 ```
 
 # <a name="Configuration"></a> Configuration
-You will need to specificy Active Directory credentials that will be
+You will need to specify Active Directory credentials that will be
 using to connect to the remote Windows hosts in the
-`/opt/stackstorm/config/activedirectory.yaml` file. You can specificy multiple
+`/opt/stackstorm/config/activedirectory.yaml` file. You can specify multiple
 sets of credentials using nested values.
 
 **Note** : `st2 pack config` doesn't handle nested schemas very well (known bug)
