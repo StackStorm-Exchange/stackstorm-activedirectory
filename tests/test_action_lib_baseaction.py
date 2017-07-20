@@ -271,7 +271,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
 
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
-        powershell = "$ProgressPreference=false\n{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = ("$ProgressPreference=false\n"
+                      "{0} {1}").format(cmdlet, cmdlet_args)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       hostname='abc',
@@ -295,7 +296,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
 
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
-        powershell = "$ProgressPreference=false\n{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = ("$ProgressPreference=false\n"
+                      "{0} {1}").format(cmdlet, cmdlet_args)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       hostname='abc',

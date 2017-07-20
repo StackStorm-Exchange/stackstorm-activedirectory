@@ -256,9 +256,10 @@ class BaseAction(Action):
         creds = self.resolve_creds(**kwargs)
         tport = self.resolve_transport(creds['connect'], **kwargs)
 
-        """Has ProgressPreference=false because if the
-        attempts to load modules that progress is forwarded
-        into the stderr and causes the commands to fail.
+        """Added ProgressPreference=false as first line
+        because if powershell attempts to load any modules
+        the progress of the module loading is then forwarded
+        into stderr and causes stackstorm to fail the call.
         There is an open pull request to pywinrm:
         https://github.com/diyan/pywinrm/issues/169
         """
