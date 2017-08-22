@@ -271,7 +271,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
 
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
-        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = ("$ProgressPreference=false\n"
+                      "{0} {1}").format(cmdlet, cmdlet_args)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       hostname='abc',
@@ -295,7 +296,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
 
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
-        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = ("$ProgressPreference=false\n"
+                      "{0} {1}").format(cmdlet, cmdlet_args)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
                                       hostname='abc',
@@ -319,7 +321,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
 
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
-        powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
+        powershell = ("$ProgressPreference=false\n"
+                      "$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
                       "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
                       "{0} -Credential $admincreds {1}"
                       "").format(cmdlet,
@@ -350,7 +353,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
 
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
-        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = "$ProgressPreference=false\n{0} {1}".format(cmdlet, cmdlet_args)
         powershell = self.get_output_ps_code('json').format(powershell)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
@@ -411,7 +414,7 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
 
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
-        powershell = "{0} {1}".format(cmdlet, cmdlet_args)
+        powershell = "$ProgressPreference=false\n{0} {1}".format(cmdlet, cmdlet_args)
         powershell = self.get_output_ps_code('json').format(powershell)
         result = action.run_ad_cmdlet(cmdlet,
                                       credential_name='base',
@@ -438,7 +441,8 @@ class TestActionLibBaseAction(ActiveDirectoryBaseActionTestCase):
 
         cmdlet = 'Test-Cmdlet'
         cmdlet_args = ''
-        powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
+        powershell = ("$ProgressPreference=false\n"
+                      "$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
                       "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
                       "{0} -Credential $admincreds {1}"
                       "").format(cmdlet,
