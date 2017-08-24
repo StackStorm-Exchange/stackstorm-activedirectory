@@ -255,12 +255,20 @@ class BaseAction(Action):
         """
         creds = self.resolve_creds(**kwargs)
         tport = self.resolve_transport(creds['connect'], **kwargs)
-        powershell = ''
+
+        """Added ProgressPreference=false as first line
+        because if powershell attempts to load any modules
+        the progress of the module loading is then forwarded
+        into stderr and causes stackstorm to fail the call.
+        There is an open pull request to pywinrm:
+        https://github.com/diyan/pywinrm/issues/169
+        """
+        powershell = '$ProgressPreference=false\n'
         cmdlet_args = kwargs['args'] if 'args' in kwargs else ''
         output_ps = self.resolve_output_ps(**kwargs)
 
         if 'username' in creds['cmdlet'] and 'password' in creds['cmdlet']:
-            powershell = ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
+            powershell += ("$securepass = ConvertTo-SecureString \"{3}\" -AsPlainText -Force;\n"
                           "$admincreds = New-Object System.Management.Automation.PSCredential(\"{2}\", $securepass);\n"  # noqa
                           "{0} -Credential $admincreds {1}"
                           "").format(cmdlet,
@@ -268,7 +276,7 @@ class BaseAction(Action):
                                      creds['cmdlet']['username'],
                                      creds['cmdlet']['password'])
         else:
-            powershell = '{0} {1}'.format(cmdlet, cmdlet_args)
+            powershell += '{0} {1}'.format(cmdlet, cmdlet_args)
 
         # add output formatters to the powershell code
         powershell = output_ps.format(powershell)
