@@ -1,4 +1,4 @@
-[![Build Status](https://circleci.com/gh/EncoreTechnologies/stackstorm-activedirectory.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/EncoreTechnologies/stackstorm-activedirectory) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build Status](https://circleci.com/gh/StackStorm-Exchange/stackstorm-activedirectory.svg?style=shield&circle-token=:circle-token)](https://circleci.com/gh/StackStorm-Exchange/stackstorm-activedirectory) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 
 # Microsoft Active Directory Integration Pack
@@ -88,9 +88,9 @@ st2 pack install activedirectory
 ```
 
 # <a name="Configuration"></a> Configuration
-You will need to specificy Active Directory credentials that will be
+You will need to specify Active Directory credentials that will be
 using to connect to the remote Windows hosts in the
-`/opt/stackstorm/config/activedirectory.yaml` file. You can specificy multiple
+`/opt/stackstorm/config/activedirectory.yaml` file. You can specify multiple
 sets of credentials using nested values.
 
 **Note** : `st2 pack config` doesn't handle nested schemas very well (known bug)
