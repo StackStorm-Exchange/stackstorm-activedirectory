@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.1.2
+
+- Fixed `$ProgressPreference=false` by setting it to `$ProgressPreference = 'SilentlyContinue'`
+
+  Contributed by Nick Maludy (Encore Technologies)
+
 ## v0.1.1
 
 - In new versions of Powershell if you load a module some text is output into 
