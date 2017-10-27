@@ -1,5 +1,5 @@
 from winrm_connection import WinRmConnection
-from st2actions.runners.pythonrunner import Action
+from st2common.runners.base_action import Action
 import json
 
 # Note:  in order for this to work you need to run the following script on the
