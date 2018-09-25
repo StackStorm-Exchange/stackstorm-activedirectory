@@ -12,7 +12,15 @@ class WinRmConnection(object):
                  transport='ntlm',
                  username=None,
                  password=None):
-        self.session = winrm.Session('https://{}:{}/wsman'.format(hostname, port),
+        # default to https (usualy port 5986)
+        scheme = 'https'
+
+        # if connect to 5985 then we need to use http
+        if port == 5985:
+            scheme = "http"
+
+        winrm_url = '{}://{}:{}/wsman'.format(scheme, hostname, port)
+        self.session = winrm.Session(winrm_url,
                                      auth=(username, password),
                                      transport=transport,
                                      server_cert_validation='ignore')

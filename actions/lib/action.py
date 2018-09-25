@@ -1,6 +1,7 @@
 from winrm_connection import WinRmConnection
 from st2common.runners.base_action import Action
 import json
+import traceback
 
 # Note:  in order for this to work you need to run the following script on the
 # host
@@ -236,7 +237,11 @@ class BaseAction(Action):
                                   "'output' option is missing in config!")
 
         if output == 'json':
-            parsed_output = json.loads(output_str)
+            try:
+                parsed_output = json.loads(output_str)
+            except ValueError:
+                tb = traceback.format_exc()
+                parsed_output = {'parse_error': tb}
         elif output == 'raw':
             parsed_output = {}
         else:
