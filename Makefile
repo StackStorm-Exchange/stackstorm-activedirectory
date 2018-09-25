@@ -51,7 +51,7 @@ clean-pyc:
 	@echo
 	@echo "==================== clean-pyc ===================="
 	@echo
-	find $(ROOT_DIR) -name 'ci' -prune -or -name '.git' -or -type f -name "*.pyc" -print | xargs rm
+	find $(ROOT_DIR) -name 'ci' -prune -or -name '.git' -or -type f -name "*.pyc" -print | xargs -r rm
 
 # list all makefile targets
 .PHONY: list
