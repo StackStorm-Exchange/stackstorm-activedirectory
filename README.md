@@ -74,14 +74,7 @@ st2 run activedirectory.install_rsat_ad_powershell hostname='remotehost.domain.c
 ```
 
 # <a name="Installation"></a> Installation
-Currently this pack is in incubation, so installation must be performed from the
-github page.
-
-``` shell
-st2 pack install https://github.com/EncoreTechnologies/stackstorm-activedirectory
-```
-
-Once it is added to the exchange you can install it like so:
+This pack is hosted on the [stackstork-exchange](https://exchange.stackstorm.org/#) you can install it like so:
 
 ``` shell
 st2 pack install activedirectory
