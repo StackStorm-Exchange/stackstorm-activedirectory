@@ -85,7 +85,7 @@ class BaseAction(Action):
         # override parameters from the action itself
         # Example:
         #   'username' parameter on the action will override the username
-        #   from the credential. This is useful for runnning the action
+        #   from the credential. This is useful for running the action
         #   standalone and/or from the commandline
         for item in CREDENTIALS_ITEMS:
             if item in creds_spec and creds_spec[item]:
