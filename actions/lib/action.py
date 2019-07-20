@@ -98,7 +98,7 @@ class BaseAction(Action):
             # ensure that creds has all items (if this credential is required)
             if ('required' in creds_spec and creds_spec['required'] and item not in creds):
                 if credential_name:
-                    raise KeyError("config.yaml mising: activedirectory:%s:%s"
+                    raise KeyError("config.yaml missing: activedirectory:%s:%s"
                                    % (credential_name, item))
                 else:
                     raise KeyError("missing action parameter %s" % item)
