@@ -82,7 +82,7 @@ st2 pack install activedirectory
 
 # <a name="Configuration"></a> Configuration
 You will need to specify Active Directory credentials that will be
-using to connect to the remote Windows hosts in the
+used to connect to the remote Windows hosts in the
 `/opt/stackstorm/config/activedirectory.yaml` file. You can specify multiple
 sets of credentials using nested values.
 
