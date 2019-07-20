@@ -74,7 +74,7 @@ st2 run activedirectory.install_rsat_ad_powershell hostname='remotehost.domain.c
 ```
 
 # <a name="Installation"></a> Installation
-This pack is hosted on the [stackstork-exchange](https://exchange.stackstorm.org/#) you can install it like so:
+This pack is hosted on the [stackstork-exchange](https://exchange.stackstorm.org/#), you can install it like so:
 
 ``` shell
 st2 pack install activedirectory
