@@ -87,7 +87,7 @@ used to connect to the remote Windows hosts in the
 sets of credentials using nested values.
 
 **Note** : `st2 pack config` doesn't handle nested schemas very well (known bug)
-    so it's best to create the configuraiton file yourself and copy it into
+    so it's best to create the configuration file yourself and copy it into
     `/opt/stackstorm/configs/activedirectory.yaml` then run `st2ctl reload --register-configs`
 
 
