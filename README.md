@@ -10,7 +10,7 @@ It is designed to mimic the Active Directory Cmdlets for PowerShell:
 - [Server 2012 Docs](https://technet.microsoft.com/en-us/library/ee617195.aspx)
 - [Server 2016 Docs](https://technet.microsoft.com/en-us/itpro/powershell/windows/addsadministration/activedirectory)
 
-This pack works by executing Active Driectory PowerShell commands on a remote
+This pack works by executing Active Directory PowerShell commands on a remote
 windows hosts.
 
 
