@@ -85,7 +85,7 @@ class BaseAction(Action):
         # override parameters from the action itself
         # Example:
         #   'username' parameter on the action will override the username
-        #   from the credential. This is useful for runnning the action
+        #   from the credential. This is useful for running the action
         #   standalone and/or from the commandline
         for item in CREDENTIALS_ITEMS:
             if item in creds_spec and creds_spec[item]:
@@ -98,7 +98,7 @@ class BaseAction(Action):
             # ensure that creds has all items (if this credential is required)
             if ('required' in creds_spec and creds_spec['required'] and item not in creds):
                 if credential_name:
-                    raise KeyError("config.yaml mising: activedirectory:%s:%s"
+                    raise KeyError("config.yaml missing: activedirectory:%s:%s"
                                    % (credential_name, item))
                 else:
                     raise KeyError("missing action parameter %s" % item)

@@ -74,14 +74,7 @@ st2 run activedirectory.install_rsat_ad_powershell hostname='remotehost.domain.c
 ```
 
 # <a name="Installation"></a> Installation
-Currently this pack is in incubation, so installation must be performed from the
-github page.
-
-``` shell
-st2 pack install https://github.com/EncoreTechnologies/stackstorm-activedirectory
-```
-
-Once it is added to the exchange you can install it like so:
+This pack is hosted on the [stackstork-exchange](https://exchange.stackstorm.org/#), you can install it like so:
 
 ``` shell
 st2 pack install activedirectory
@@ -89,12 +82,12 @@ st2 pack install activedirectory
 
 # <a name="Configuration"></a> Configuration
 You will need to specify Active Directory credentials that will be
-using to connect to the remote Windows hosts in the
+used to connect to the remote Windows hosts in the
 `/opt/stackstorm/config/activedirectory.yaml` file. You can specify multiple
 sets of credentials using nested values.
 
 **Note** : `st2 pack config` doesn't handle nested schemas very well (known bug)
-    so it's best to create the configuraiton file yourself and copy it into
+    so it's best to create the configuration file yourself and copy it into
     `/opt/stackstorm/configs/activedirectory.yaml` then run `st2ctl reload --register-configs`
 
 
