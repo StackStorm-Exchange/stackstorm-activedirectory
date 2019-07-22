@@ -1,5 +1,10 @@
 # Change Log
 
+## v0.1.4
+
+- Spelling updates in the README.md.
+- Removed the incubator installation instructions.
+
 ## v0.1.3
 
 - Added automatic change to `http` when using port `5985`.
