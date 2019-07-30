@@ -1,5 +1,26 @@
 ---
 
+poll_interval:
+  description: Time between polling for the sensor
+  type: "integer"
+  default: 120
+  required: false
+
+hostname:
+  description: Hostname to use in sensor
+  type: "string"
+  required: true
+
+groups:
+  descritpion: Groups to check for change in membership
+  type: "array"
+  required: true
+
+creds:
+  description: Which credential name to use for authorizing the sensor
+  type: "string"
+  required: true
+
 port:
   description: Port number for the WinRM connection (global).
   type: "integer"
