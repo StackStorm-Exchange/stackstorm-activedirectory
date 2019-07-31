@@ -71,6 +71,7 @@ class ADAdminSensor(PollingSensor):
             response = self.session.run_ps(powershell)
 
             self._logger.info(response)
+            self._logger.info("here")
             # self._logger.info(response.json())
 
             removed = list(set(members) - set(response))
