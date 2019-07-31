@@ -67,14 +67,14 @@ class ADAdminSensor(PollingSensor):
             # add output formatters to the powershell code
             powershell = output_ps.format(powershell)
 
-            self._logger.info(powershell)
+            self._logger.debug(powershell)
 
             # run powershell command
             response = self.session.run_ps(powershell)
 
             response_output = response.__dict__['std_out']
 
-            self._logger.info(response_output)
+            self._logger.debug(response_output)
 
             response_list = response_output.split('\r\n\r\n')
 
@@ -95,6 +95,8 @@ class ADAdminSensor(PollingSensor):
                                              payload=payload)
 
                 self._set_members(members=response_list)
+            else:
+                self._logger('No change in AAD group membership detected')
 
     def cleanup(self):
         pass
