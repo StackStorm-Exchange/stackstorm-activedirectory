@@ -62,7 +62,7 @@ class ADAdminSensor(PollingSensor):
                          "}}")
 
             powershell = "$ProgressPreference = 'SilentlyContinue';\n"
-            powershell += 'Get-ADGroupMember -Identity ' + group
+            powershell += 'Get-ADGroupMember -Identity "' + group + '"'
 
             # add output formatters to the powershell code
             powershell = output_ps.format(powershell)
