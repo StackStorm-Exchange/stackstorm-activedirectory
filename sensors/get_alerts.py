@@ -26,9 +26,7 @@ class ADAdminSensor(PollingSensor):
         transport = config.get('transport', 'ntlm')
 
         creds_name = config.get('sensor_credential_name')
-        creds = config.get('activedirectory')
-
-        self._logger.info(creds)
+        creds = config.get('activedirectory').get(creds_name)
 
         username = creds.get('username')
         password = creds.get('password')
