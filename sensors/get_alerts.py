@@ -52,7 +52,7 @@ class ADAdminSensor(PollingSensor):
 
             output_ps = ("Try\n"
                          "{{\n"
-                         "  {0} | ConvertTo-Json\n"
+                         "  {0} \n"
                          "}}\n"
                          "Catch\n"
                          "{{\n"
