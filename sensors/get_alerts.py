@@ -76,18 +76,10 @@ class ADAdminSensor(PollingSensor):
 
             self._logger.info(response_output)
 
-            self._logger.info("hereeee")
-
             response_list = response_output.split('\r\n\r\n')
 
-            self._logger.info(response_list)
-
-            self._logger.info("hereeeeeeee")
-
-            self._logger.info(set(response_list))
-
-            removed = list(set(members) - set(response))
-            added = list(set(response) - set(members))
+            removed = list(set(members) - set(response_list))
+            added = list(set(response_list) - set(members))
 
             if removed or added:
 
