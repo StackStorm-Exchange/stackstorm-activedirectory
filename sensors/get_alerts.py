@@ -74,7 +74,7 @@ class ADAdminSensor(PollingSensor):
 
             self._logger.info(response)
             self._logger.info("here")
-            # self._logger.info(response.json())
+            self._logger.info(response.json())
 
             removed = list(set(members) - set(response))
             added = list(set(response) - set(members))
