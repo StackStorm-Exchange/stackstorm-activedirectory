@@ -72,14 +72,15 @@ class ADAdminSensor(PollingSensor):
             # run powershell command
             response = self.session.run_ps(powershell)
 
-            self._logger.info(response)
-            self._logger.info("here")
-            self._logger.info(dir(response))
+            response_output = response.__dict__['std_out']
+
+            self._logger.info(response_output)
+
             self._logger.info("hereeee")
-            self._logger.info(response.__dict__)
-            self._logger.info("hereeeeeeeee")
-            self._logger.info(response.__dict__['std_out'])
-            self._logger.info(response.json())
+
+            response_list = response_output.split('/n')
+
+            self._logger.info(response_list)
 
             removed = list(set(members) - set(response))
             added = list(set(response) - set(members))
