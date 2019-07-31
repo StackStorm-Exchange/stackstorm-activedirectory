@@ -16,7 +16,7 @@ groups:
   type: "array"
   required: true
 
-creds:
+sensor_credential_name:
   description: Which credential name to use for authorizing the sensor
   type: "string"
   required: true
