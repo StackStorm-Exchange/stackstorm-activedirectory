@@ -67,6 +67,8 @@ class ADAdminSensor(PollingSensor):
             # add output formatters to the powershell code
             powershell = output_ps.format(powershell)
 
+            self._logger.info(powershell)
+
             # run powershell command
             response = self.session.run_ps(powershell)
 
