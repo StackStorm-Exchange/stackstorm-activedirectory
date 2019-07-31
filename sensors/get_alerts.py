@@ -85,7 +85,7 @@ class ADAdminSensor(PollingSensor):
 
                 payload = {
                     'old_list': members,
-                    'new_list': response,
+                    'new_list': response_list,
                     'removed': removed,
                     'added': added,
                     'group': group
@@ -94,7 +94,7 @@ class ADAdminSensor(PollingSensor):
                 self.sensor_service.dispatch(trigger='activedirectory.alert',
                                              payload=payload)
 
-                self._set_members(members=members)
+                self._set_members(members=response_list)
 
     def cleanup(self):
         pass
