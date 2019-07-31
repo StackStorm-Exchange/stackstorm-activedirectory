@@ -96,7 +96,7 @@ class ADAdminSensor(PollingSensor):
 
                 self._set_members(members=response_list)
             else:
-                self._logger('No change in AAD group membership detected')
+                self._logger.info('No change in AAD group membership detected')
 
     def cleanup(self):
         pass
