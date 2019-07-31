@@ -27,6 +27,8 @@ class ADAdminSensor(PollingSensor):
 
         creds = config.get('sensor_credential_name')
 
+        self._logger(creds)
+
         username = creds.get('username')
         password = creds.get('password')
 
