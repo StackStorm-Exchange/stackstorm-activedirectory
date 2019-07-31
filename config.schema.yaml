@@ -12,7 +12,7 @@ hostname:
   required: true
 
 groups:
-  descritpion: Groups to check for change in membership
+  description: Groups to check for change in membership
   type: "array"
   required: true
 
