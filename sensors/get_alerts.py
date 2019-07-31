@@ -25,7 +25,8 @@ class ADAdminSensor(PollingSensor):
         port = config.get('port', 5986)
         transport = config.get('transport', 'ntlm')
 
-        creds = config.get('sensor_credential_name')
+        creds_name = config.get('sensor_credential_name')
+        creds = config.get('credentials')
 
         self._logger.info(creds)
 
