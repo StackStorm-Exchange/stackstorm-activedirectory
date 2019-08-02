@@ -76,7 +76,7 @@ class ADAdminSensor(PollingSensor):
 
             response_output = response.__dict__['std_out']
 
-            self._logger.debug(response_output)
+            self._logger.info(response_output)
 
             response_list = response_output.split('\r\n\r\n')
 
