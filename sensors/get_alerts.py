@@ -79,11 +79,19 @@ class ADAdminSensor(PollingSensor):
             response_list = json.loads(response.__dict__['std_out'])
 
             self._logger.info(response_list)
-            self._logger.info(set(response_list))
-            self._logger.info(set(members))
 
-            removed = list(set(members) - set(response_list))
-            added = list(set(response_list) - set(members))
+            removed = []
+            added = []
+
+            for new_item in response_list:
+                if new_item not in members:
+                    added.append(new_item)
+            for old_item in members:
+                if old_item not in response_list:
+                    removed.append(old_item)
+
+            self.logger.info(removed)
+            self.logger.info(added)
 
             if removed or added:
                 self._logger.info('Change in AD group membership detected.')
