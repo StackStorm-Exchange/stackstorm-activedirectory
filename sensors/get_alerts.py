@@ -73,6 +73,7 @@ class ADAdminSensor(PollingSensor):
             response = self.session.run_ps(powershell)
 
             self._logger.info(response)
+            self._logger.info(response.__dict__)
             self._logger.info(response.json())
 
             response_output = response.__dict__['std_out']
