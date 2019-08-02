@@ -2,8 +2,8 @@
 
 """Active Directory Integration - Sense admin list change"""
 
-import winrm
 from st2reactor.sensor.base import PollingSensor
+import winrm
 
 
 class ADAdminSensor(PollingSensor):
@@ -15,7 +15,7 @@ class ADAdminSensor(PollingSensor):
         super(ADAdminSensor, self).__init__(sensor_service=sensor_service,
                                             config=config,
                                             poll_interval=poll_interval)
-        self._trigger_ref = 'activedirectory.admin_change'
+        self._trigger_ref = 'activedirectory.watched_group_changed'
 
         self._logger = self._sensor_service.get_logger(__name__)
 
@@ -25,8 +25,8 @@ class ADAdminSensor(PollingSensor):
         port = config.get('port', 5986)
         transport = config.get('transport', 'ntlm')
 
-        creds_name = config.get('sensor_credential_name')
-        creds = config.get('activedirectory').get(creds_name)
+        self.creds_name = config.get('sensor_credential_name')
+        creds = config.get('activedirectory').get(self.creds_name)
 
         username = creds.get('username')
         password = creds.get('password')
@@ -88,10 +88,11 @@ class ADAdminSensor(PollingSensor):
                     'new_list': response_list,
                     'removed': removed,
                     'added': added,
-                    'group': group
+                    'group': group,
+                    'tenant': self.creds_name
                 }
 
-                self.sensor_service.dispatch(trigger='activedirectory.alert',
+                self.sensor_service.dispatch(trigger=self._trigger_ref,
                                              payload=payload)
 
                 self._set_members(members=response_list)
