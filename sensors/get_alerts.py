@@ -2,6 +2,8 @@
 
 """Active Directory Integration - Sense admin list change"""
 
+import json
+
 import winrm
 from st2reactor.sensor.base import PollingSensor
 
@@ -74,7 +76,7 @@ class ADAdminSensor(PollingSensor):
 
             self._logger.info(response)
 
-            response_list = response.__dict__['std_out']
+            response_list = json.loads(response.__dict__['std_out'])
 
             self._logger.info(response_list)
             self._logger.info(set(response_list))
