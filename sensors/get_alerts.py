@@ -90,9 +90,6 @@ class ADAdminSensor(PollingSensor):
                 if old_item not in response_list:
                     removed.append(old_item)
 
-            self._logger.info(removed)
-            self._logger.info(added)
-
             if removed or added:
                 self._logger.info('Change in AD group membership detected.')
                 payload = {
