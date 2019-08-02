@@ -1,5 +1,11 @@
 # Change Log
 
+## v0.1.5
+
+- Added sensor to watch specified AD group membership
+- Added disabled example rule, with out an action
+- Added python 2/3 lines in `pack.yaml`
+
 ## v0.1.4
 
 - Spelling updates in the README.md.

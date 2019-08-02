@@ -9,6 +9,13 @@ keywords:
     - active
     - directory
     - ad
-version: 0.1.4
+version: 0.1.5
+python_versions:
+  - "2"
+  - "3"
 author: Encore Technologies
 email: code@encore.tech
+contributors:
+  - "Brian Tackett <btackett@syncurity.net>"
+  - "JP Bourget <jp@syncurity.net>"
+
