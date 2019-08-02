@@ -1,6 +1,6 @@
 ---
   name: watched_group_changed
-  pack: active_directory
+  pack: activedirectory
   description: Create IR-Flow Alert When Watched AD Group Changes
   enabled: false
 
