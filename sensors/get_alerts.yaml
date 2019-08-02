@@ -5,8 +5,8 @@
   poll_interval: 120
   trigger_types:
     -
-      name: "alert"
-      description: "Alert from Active Directory"
+      name: "watched_group_changed"
+      description: "Watched Group Change Alert in Active Directory"
       payload_schema:
         type: "object"
         properties:
