@@ -1,7 +1,7 @@
 ---
-  name: notification
-  pack: cb_defense
-  description: Create IR-Flow Alert From Carbon Black Defense Notification
+  name: watched_group_changed
+  pack: active_directory
+  description: Create IR-Flow Alert When Watched AD Group Changes
   enabled: false
 
   type:
@@ -10,7 +10,7 @@
 
   trigger:
     type: activedirectory.watched_group_changed
-    description: A notification from Carbon Black Defense
+    description: Trigger for AD Group Membership Changes
     parameters: {}
   metadata_file: ''
   context:
