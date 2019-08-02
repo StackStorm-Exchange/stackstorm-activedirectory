@@ -2,8 +2,8 @@
 
 """Active Directory Integration - Sense admin list change"""
 
-from st2reactor.sensor.base import PollingSensor
 import winrm
+from st2reactor.sensor.base import PollingSensor
 
 
 class ADAdminSensor(PollingSensor):
@@ -52,7 +52,7 @@ class ADAdminSensor(PollingSensor):
 
             output_ps = ("Try\n"
                          "{{\n"
-                         "  {0} \n"
+                         "  {0} | ConvertTo-Json\n"
                          "}}\n"
                          "Catch\n"
                          "{{\n"
@@ -71,6 +71,9 @@ class ADAdminSensor(PollingSensor):
 
             # run powershell command
             response = self.session.run_ps(powershell)
+
+            self._logger.info(response)
+            self._logger.info(response.json())
 
             response_output = response.__dict__['std_out']
 
