@@ -82,7 +82,7 @@ class ADAdminSensor(PollingSensor):
             added = list(set(response_list) - set(members))
 
             if removed or added:
-
+                self._logger.info('Change in AD group membership detected.')
                 payload = {
                     'old_list': members,
                     'new_list': response_list,
@@ -97,7 +97,7 @@ class ADAdminSensor(PollingSensor):
 
                 self._set_members(members=response_list)
             else:
-                self._logger.info('No change in AAD group membership detected')
+                self._logger.info('No change in AD group membership detected')
 
     def cleanup(self):
         pass
