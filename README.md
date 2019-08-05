@@ -94,7 +94,11 @@ sets of credentials using nested values.
 ## <a name="Schema"></a> Schema
 
 ``` yaml
----
+poll_interval: <Time between polling for the sensor: default =  120>
+hostname: <Hostname to use in sensor>
+groups: <Groups to check for change in membership>
+sensor_credential_name: <Which credential name to use for authorizing the sensor>
+output: <Output format of cmdlets exected by this pack (json, raw) (global): default = 'json'>
 port: <default port number to use for WinRM connections: default = '5986'>
 transport: <default transport to use for WinRM connections: default = 'ntlm'>
 
@@ -112,10 +116,14 @@ activedirectory:
 
 ## <a name="SchemaExample"></a> Schema Example
 ``` yaml
----
+poll_interval: 120
+hostname: 4.4.4.4
+groups:
+    - "Domain Admins"
+sensor_credential_name: dev
 port: 5986
 transport: ntlm
-
+  
 activedirectory:
   dev:
     username: username@dev.domain.tld
@@ -274,7 +282,6 @@ configuration file `/opt/stackstorm/configs/activedirectory.yaml`.
 Let's say we had a configuration file with the contents:
 
 ``` yaml
----
 port: 5986
 transport: ntlm
 
@@ -553,7 +560,9 @@ Raw output is simply the stdout/stderr strings returned to you. In this case
 the output variables `stdout` and `stderr` would be your interaction point.
 The variables `stdout_dict` and `stderr_dict` will be set to empty dictionaries.
 
+# <a name="Sensors"></a> Sensors
 
+The sensor checks a list of groups periodically and creates a trigger when group membership has changed.
 
 # <a name="FutureIdeas"></a> Future Ideas
 -  Create action to install Active Directory

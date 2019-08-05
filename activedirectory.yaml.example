@@ -1,4 +1,9 @@
 ---
+poll_interval: 120
+hostname: 4.4.4.4
+groups:
+    - "Domain Admins"
+sensor_credential_name: dev
 port: 5986
 transport: ntlm
   
