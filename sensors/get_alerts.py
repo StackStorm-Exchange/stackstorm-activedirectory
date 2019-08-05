@@ -52,7 +52,7 @@ class ADAdminSensor(PollingSensor):
 
         for group in self.groups:
 
-            members = self._get_members()
+            members = self._get_members(group)
 
             output_ps = ("Try\n"
                          "{{\n"
