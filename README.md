@@ -564,6 +564,12 @@ The variables `stdout_dict` and `stderr_dict` will be set to empty dictionaries.
 
 The sensor checks a list of groups periodically and creates a trigger when group membership has changed.
 
+The sensor should be configured through the `activedirectory.yaml` file in `/opt/stackstorm/configs`.
+
+When you have your desired `activedirectory.yaml` file you need to register your configs: 
+
+`st2ctl reload --register-configs`
+
 # <a name="FutureIdeas"></a> Future Ideas
 -  Create action to install Active Directory
    https://docs.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/install-active-directory-domain-services--level-100-#BKMK_PS
