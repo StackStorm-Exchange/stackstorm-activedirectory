@@ -43,7 +43,7 @@ class ADAdminSensor(PollingSensor):
         self.members = {}
 
         for group in self.groups:
-            self.members[group] = ['first_run_place_holder']
+            self.members[group] = []
 
     def setup(self):
         pass
