@@ -1,0 +1,26 @@
+---
+  name: watched_group_member_removed
+  pack: activedirectory
+  description: Response to trigger then AD watched group memebership has a deletion
+  enabled: false
+
+  type:
+    ref: standard
+    parameters: {}
+
+  trigger:
+    type: activedirectory.watched_group_member_removed
+    description: Trigger for AD Group Membership Deletion
+    parameters: {}
+  metadata_file: ''
+  context:
+    user: st2admin
+  criteria: {}
+  action:
+    ref: irflow.create_alert
+    parameters:
+      incoming_field_group_name: "Monitored AD Group - User Removed"
+      log_level: "DEBUG"
+      description: "Monitored AD Group - User Removed"
+      payload: "{{ trigger.payload }}"
+      suppress_missing_field_warning: true

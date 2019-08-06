@@ -102,8 +102,8 @@ class ADAdminSensor(PollingSensor):
             if added:
                 self._logger.info('New member in AD group ' + group + 'detected.')
                 payload = {
-                    'added': added,
-                    'group': group,
+                    'accountsAdded': added,
+                    'groupName ': group,
                     'tenant': self.creds_name,
                     'SamAccountNames': added_names
                 }
@@ -114,8 +114,8 @@ class ADAdminSensor(PollingSensor):
             if removed:
                 self._logger.info('Member removal in AD group ' + group + ' detected.')
                 payload = {
-                    'removed': removed,
-                    'group': group,
+                    'accountsRemoved': removed,
+                    'groupName ': group,
                     'tenant': self.creds_name,
                     'SamAccountNames': removed_names
                 }
