@@ -3,12 +3,12 @@ ref: activedirectory
 name: activedirectory
 description: StackStorm integration pack for working with Microsoft Active Directory.
 keywords: 
-    - microsoft
-    - ms
-    - activedirectory
-    - active
-    - directory
-    - ad
+  - microsoft
+  - ms
+  - activedirectory
+  - active
+  - directory
+  - ad
 version: 0.1.4
 author: Encore Technologies
 email: code@encore.tech
