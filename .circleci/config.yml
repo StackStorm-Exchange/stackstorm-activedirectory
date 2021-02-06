@@ -30,6 +30,7 @@ jobs:
             # git clone -b master git://github.com/stackstorm-exchange/ci.git ~/ci
             git clone -b use-graphql-for-index git://github.com/cognifloyd/ci.git ~/ci
             ~/ci/.circle/dependencies ; ~/ci/.circle/exit_on_py3_checks $?
+            ls -la ~ ~/virtualenv ~/virtualenv/bin /tmp/st2
       - run:
           name: Run tests (Python 3.6)
           # NOTE: We don't want to use default "-e" option because this means
@@ -73,6 +74,7 @@ jobs:
       - run:
           name: Install dependencies
           command: |
+            ls -la ~ ~/virtualenv ~/virtualenv/bin /tmp/st2
             sudo apt-get update
             sudo apt -y install gmic optipng
             GH_VERSION="1.5.0"
@@ -81,10 +83,12 @@ jobs:
               "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.deb"
             sudo dpkg -i ~/.apt-cache/gh_${GH_VERSION}_linux_amd64.deb
             GH_TOKEN=${MACHINE_PASSWORD} GH_PAGER=cat gh api /rate_limit
+            ls -la ~ ~/virtualenv ~/virtualenv/bin /tmp/st2
       - run:
           name: Update exchange.stackstorm.org
+          shell: /bin/bash -exo pipefail
           command: |
-            git clone --help
+            git --version
             ~/ci/.circle/deployment
 
 workflows:
