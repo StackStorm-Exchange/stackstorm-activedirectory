@@ -27,7 +27,8 @@ jobs:
           # doesn't declare support for Python 3
           shell: /bin/bash
           command: |
-            git clone -b master git://github.com/stackstorm-exchange/ci.git ~/ci
+            # git clone -b master git://github.com/stackstorm-exchange/ci.git ~/ci
+            git clone -b use-graphql-for-index git://github.com/cognifloyd/ci.git ~/ci
             ~/ci/.circle/dependencies ; ~/ci/.circle/exit_on_py3_checks $?
       - run:
           name: Run tests (Python 3.6)
@@ -82,7 +83,9 @@ jobs:
             GH_TOKEN=${MACHINE_PASSWORD} GH_PAGER=cat gh api /rate_limit
       - run:
           name: Update exchange.stackstorm.org
-          command: ~/ci/.circle/deployment
+          command: |
+            git clone --help
+            ~/ci/.circle/deployment
 
 workflows:
   version: 2
