@@ -74,6 +74,12 @@ jobs:
           command: |
             sudo apt-get update
             sudo apt -y install gmic optipng
+            GH_VERSION="1.5.0"
+            [[ -f ~/.apt-cache/gh_${GH_VERSION}_linux_amd64.deb ]] || \
+              sudo curl -L -sS --fail -o ~/.apt-cache/gh_${GH_VERSION}_linux_amd64.deb \
+              "https://github.com/cli/cli/releases/download/v${GH_VERSION}/gh_${GH_VERSION}_linux_amd64.deb"
+            sudo dpkg -i ~/.apt-cache/gh_${GH_VERSION}_linux_amd64.deb
+            GH_TOKEN=${MACHINE_PASSWORD} GH_PAGER=cat gh api /rate_limit
       - run:
           name: Update exchange.stackstorm.org
           command: ~/ci/.circle/deployment
