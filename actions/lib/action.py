@@ -306,7 +306,6 @@ class BaseAction(Action):
                   'stdout_dict': self.parse_output(stdout, **kwargs),
                   'stderr_dict': self.parse_output(stderr, **kwargs)}
 
-
         if result['exit_status'] == 0:
             return (True, result)
         else:
