@@ -1,5 +1,9 @@
 # Change Log
 
+## v1.0.1
+
+- Ensure stdout, stderr are not bytes objects.
+
 ## v1.0.0
 
 - Drop Python 2.7 support
