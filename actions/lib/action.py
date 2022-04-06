@@ -291,11 +291,21 @@ class BaseAction(Action):
 
         # run powershell command
         ps_result = self.connection.run_ps(powershell)
-        result = {'stdout': ps_result.std_out,
-                  'stderr': ps_result.std_err,
+
+        # Ensure stdout and stderr is always a string
+        stdout = ps_result.std_out
+        stderr = ps_result.std_err
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode("utf-8")
+        if isinstance(stderr, bytes):
+            stderr = stderr.decode("utf-8")
+
+        result = {'stdout': stdout,
+                  'stderr': stderr,
                   'exit_status': ps_result.status_code,
-                  'stdout_dict': self.parse_output(ps_result.std_out, **kwargs),
-                  'stderr_dict': self.parse_output(ps_result.std_err, **kwargs)}
+                  'stdout_dict': self.parse_output(stdout, **kwargs),
+                  'stderr_dict': self.parse_output(stderr, **kwargs)}
+
 
         if result['exit_status'] == 0:
             return (True, result)
